@@ -1,6 +1,6 @@
 import pytest
 
-import oldisplay.colors as lib
+import oldisplay.collection as lib
 
 
 def test_Color():
