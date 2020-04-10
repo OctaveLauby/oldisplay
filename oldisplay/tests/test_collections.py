@@ -1,16 +1,19 @@
 import pytest
 
-import oldisplay.collection as lib
+import oldisplay.collections as lib
 
 
-def test_Color():
-    Color = lib.Color
+def test_color():
+    Color = lib.colors.Color
 
     black = Color(0, 0, 0)
     white = Color(255, 255, 255)
     red = Color(255, 0, 0)
     green = Color(0, 255, 0)
     blue = Color(0, 0, 255)
+
+    assert lib.COLORS.black == black
+    assert lib.COLORS.white == white
 
     with pytest.raises(ValueError):
         Color(0, -1, 0)

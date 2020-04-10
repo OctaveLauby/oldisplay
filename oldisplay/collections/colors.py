@@ -2,7 +2,7 @@
 
 https://www.rapidtables.com/web/color/RGB_Color.html
 """
-
+from olutils import Param
 
 def cut_in(component):
     """Truncate component so it fits b/w 0 and 255"""
@@ -143,4 +143,4 @@ COLOR_TUPLES = {
     'white': (255, 255, 255),
 }
 
-COLORS = {n: Color(*t) for n, t in COLOR_TUPLES.items()}
+COLORS = Param({n: Color(*t) for n, t in COLOR_TUPLES.items()})
