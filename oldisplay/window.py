@@ -7,7 +7,8 @@ from oldisplay.collections.colors import Color, COLORS
 
 
 
-class WindowSettings(object):
+class WindowSettings:
+    """Container for window display settings"""
 
     dft_params = {
         'name': "Application Window",
@@ -17,6 +18,15 @@ class WindowSettings(object):
     }
 
     def __init__(self, **kwargs):
+        """Initiate window settings
+
+        Args:
+            name (str):         name of window
+            size (2-int-tuple): size of window in pixels
+            fps (int):          number of frags per seconds
+            background (3-int-tuple|str|Color): color of background
+                @see collections.COLORS for available colors
+        """
         params = read_params(kwargs, self.__class__.dft_params)
         for param, value in params.items():
             self.set(param, value)
@@ -43,9 +53,11 @@ class WindowSettings(object):
             raise ValueError(f"Unknown parameter name '{param}'")
 
 
-class Window(object):
+class Window:
+    """Class to ease window build, display and management"""
 
     def __init__(self, **kwargs):
+        """Initiate a window"""
 
         # Read window settings
         self._settings = WindowSettings(**kwargs)
@@ -63,6 +75,7 @@ class Window(object):
 
     @property
     def settings(self):
+        """Return setting container"""
         return self._settings
 
     # ----------------------------------------------------------------------- #
@@ -99,12 +112,8 @@ class Window(object):
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     self.stop = True
-            self.update()
+            pg.display.flip()  # Update the full display Surface to the screen
             self.clock.tick(self.settings.fps)
         self.screen = None
         pg.quit()
         self.initiated = False
-
-    def update(self):
-        """Update display"""
-        pg.display.flip()

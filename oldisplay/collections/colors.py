@@ -10,12 +10,13 @@ def cut_in(component):
 
 
 class Color(tuple):
+    """Class to define and manage colors"""
 
-    def __new__(self, r, g, b):
+    def __new__(cls, r, g, b):
         for comp in (r, g, b):
             if not 0 <= comp < 256:
                 raise ValueError("Color component must be b/w 0 and 255")
-        return tuple.__new__(Color, (r, g, b))
+        return tuple.__new__(cls, (r, g, b))
 
     @property
     def r(self):
@@ -48,10 +49,9 @@ class Color(tuple):
     def mix(cls, *colors):
         if not colors:
             raise TypeError("Expecting at least one color to mix")
-        elif len(colors) == 1:
+        if len(colors) == 1:
             return colors[0]
-        else:
-            return colors[0] * cls.mix(*colors[1:])
+        return colors[0] * cls.mix(*colors[1:])
 
 
 COLOR_TUPLES = {
