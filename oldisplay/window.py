@@ -24,7 +24,7 @@ class WindowSettings:
             name (str):         name of window
             size (2-int-tuple): size of window in pixels
             fps (int):          number of frags per seconds
-            background (3-int-tuple|str|Color): color of background
+            background (color description): color of background
                 @see collections.COLORS for available colors
         """
         params = read_params(kwargs, self.__class__.dft_params)
@@ -43,12 +43,7 @@ class WindowSettings:
             assert isinstance(value, int) and 1 < value < 200
             self.fps = value
         elif param == "background":
-            if isinstance(value, str):
-                value = COLORS[value]
-            elif isinstance(value, tuple):
-                value = Color(*value)
-            assert isinstance(value, Color)
-            self.background = value
+            self.background = Color.get(value)
         else:
             raise ValueError(f"Unknown parameter name '{param}'")
 
@@ -69,6 +64,9 @@ class Window:
 
         self.initiated = False
         self.stop = False
+
+        # Screen content
+        self.components = []
 
     # ----------------------------------------------------------------------- #
     # Properties
@@ -109,9 +107,14 @@ class Window:
 
         self.stop = False
         while not self.stop:
+            events = []
             for event in pg.event.get():
+                events.append(event)
                 if event.type == pg.QUIT:
                     self.stop = True
+            for component in self.components:
+                print(component)
+                component.update(self.screen, events=events)
             pg.display.flip()  # Update the full display Surface to the screen
             self.clock.tick(self.settings.fps)
         self.screen = None
