@@ -113,7 +113,6 @@ class Window:
                 if event.type == pg.QUIT:
                     self.stop = True
             for component in self.components:
-                print(component)
                 component.update(self.screen, events=events)
             pg.display.flip()  # Update the full display Surface to the screen
             self.clock.tick(self.settings.fps)

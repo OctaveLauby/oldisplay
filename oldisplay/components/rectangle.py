@@ -1,4 +1,5 @@
 import pygame as pg
+from olutils import read_params
 
 from oldisplay.collections import Color
 from .component import Component
@@ -24,21 +25,40 @@ class RectangleHitbox():
 
 class Rectangle(Component):
 
-    def __init__(self, position, size, inner_color='white',
-                 border_color='black', border_width=2):
+    dft_look = {
+        'inner_color': "white",
+        'border_color': "black",
+        'border_width': 2,
+    }
+
+    def __init__(self, position, size, **kwargs):
+        """Initiate instance of rectangle
+
+        Args:
+            position (2-int-tuple)  : position of top-right on surface
+            size (2-int-tuple)      : size of rectangle
+            **kwargs                : aspect description
+                inner_color (color description)
+                border_color (color description)
+                border_width (int)
+        """
+        params = read_params(kwargs, self.cls.dft_look)
+
         super().__init__()
+        self.disable()
+
         self.hitbox = RectangleHitbox(position, size)
 
-        if inner_color:
-            self.inner_c = Color.get(inner_color)
+        if params.inner_color:
+            self.inner_c = Color.get(params.inner_color)
             self.rect = pg.Rect(position, size)
         else:
             self.inner_c = None
             self.rect = None
 
-        if border_color and border_width:
-            self.outer_c = Color.get(border_color)
-            self.outer_w = border_width
+        if params.border_color and params.border_width:
+            self.outer_c = Color.get(params.border_color)
+            self.outer_w = params.border_width
             x, y = position
             dx, dy = size
             self.outline = [
