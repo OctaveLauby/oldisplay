@@ -9,11 +9,18 @@ if __name__ == "__main__":
     window.components = [
         Rectangle(
             (0, 0), (100, 100),
-            inner_color='blue'
+            inside='blue'
         ),
         Rectangle(
             (100, 0), (100, 100),
-            inner_color='green', border_color='purple', border_width=5
+            inside='green', border='purple', width=5,
+            hovered={'inside': "blue"},
+        ),
+        Rectangle(
+            (200, 0), (100, 100),
+            inside='red', width=5,
+            hovered={'inside': "orange"},
+            clicked={'inside': "green"},
         ),
     ]
     window.open()
