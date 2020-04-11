@@ -4,55 +4,6 @@ https://www.rapidtables.com/web/color/RGB_Color.html
 """
 from olutils import Param
 
-def cut_in(component):
-    """Truncate component so it fits b/w 0 and 255"""
-    return  max(0, min(component, 255))
-
-
-class Color(tuple):
-    """Class to define and manage colors"""
-
-    def __new__(cls, r, g, b):
-        for comp in (r, g, b):
-            if not 0 <= comp < 256:
-                raise ValueError("Color component must be b/w 0 and 255")
-        return tuple.__new__(cls, (r, g, b))
-
-    @property
-    def r(self):
-        """Red component of color"""
-        return self[0]
-
-    @property
-    def g(self):
-        """Green component of color"""
-        return self[1]
-
-    @property
-    def b(self):
-        """Blue component of color"""
-        return self[2]
-
-    def __add__(self, other):
-        operation = lambda sc, oc: sc + oc
-        return Color(*[cut_in(operation(*args)) for args in zip(self, other)])
-
-    def __mul__(self, other):
-        operation = lambda sc, oc: (sc + oc)/2
-        return Color(*[cut_in(operation(*args)) for args in zip(self, other)])
-
-    def __sub__(self, other):
-        operation = lambda sc, oc: sc - oc
-        return Color(*[cut_in(operation(*args)) for args in zip(self, other)])
-
-    @classmethod
-    def mix(cls, *colors):
-        if not colors:
-            raise TypeError("Expecting at least one color to mix")
-        if len(colors) == 1:
-            return colors[0]
-        return colors[0] * cls.mix(*colors[1:])
-
 
 COLOR_TUPLES = {
     # Red-ish
@@ -142,5 +93,75 @@ COLOR_TUPLES = {
     'white_smoke': (245, 245, 245),
     'white': (255, 255, 255),
 }
+COLORS = {}  # Defined below
+
+
+def cut_in(component):
+    """Truncate component so it fits b/w 0 and 255"""
+    return  max(0, min(component, 255))
+
+
+class Color(tuple):
+    """Class to define and manage colors"""
+
+    def __new__(cls, r, g, b):
+        for comp in (r, g, b):
+            if not 0 <= comp < 256:
+                raise ValueError("Color component must be b/w 0 and 255")
+        return tuple.__new__(cls, (r, g, b))
+
+    @property
+    def r(self):
+        """Red component of color"""
+        return self[0]
+
+    @property
+    def g(self):
+        """Green component of color"""
+        return self[1]
+
+    @property
+    def b(self):
+        """Blue component of color"""
+        return self[2]
+
+    def __add__(self, other):
+        operation = lambda sc, oc: sc + oc
+        return Color(*[cut_in(operation(*args)) for args in zip(self, other)])
+
+    def __mul__(self, other):
+        operation = lambda sc, oc: (sc + oc)/2
+        return Color(*[cut_in(operation(*args)) for args in zip(self, other)])
+
+    def __sub__(self, other):
+        operation = lambda sc, oc: sc - oc
+        return Color(*[cut_in(operation(*args)) for args in zip(self, other)])
+
+    @classmethod
+    def get(cls, color):
+        """Return Color object from color description
+
+        Args:
+            color (3-int-tuple|str|Color): color description
+        """
+        if isinstance(color, cls):
+            return color
+        if isinstance(color, (list, tuple)):
+            return cls(*color)
+        if isinstance(color, str):
+            try:
+                return COLORS[color]
+            except KeyError:
+                raise KeyError(f"Unknown color '{color}'")
+        raise TypeError(f"Can't build color from {type(color)} objects")
+
+    @classmethod
+    def mix(cls, *colors):
+        if not colors:
+            raise TypeError("Expecting at least one color to mix")
+        if len(colors) == 1:
+            return colors[0]
+        return colors[0] * cls.mix(*colors[1:])
+
 
 COLORS = Param({n: Color(*t) for n, t in COLOR_TUPLES.items()})

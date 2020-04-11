@@ -22,3 +22,9 @@ def test_color():
     assert white - red - green - blue == black
     assert red - white == black
     assert Color(10, 0, 10) * Color(0, 10, 20) == Color(5, 5, 15)
+
+    assert Color.get('black') is lib.COLORS.black
+    assert Color.get('white') is lib.COLORS.white
+
+    with pytest.raises(KeyError):
+        Color.get('unknown')
