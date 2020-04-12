@@ -1,14 +1,14 @@
 if __name__ == "__main__":
     from oldisplay import Window
     from oldisplay.collections import COLORS
-    from oldisplay.components import Rectangle
+    from oldisplay.components import Circle, Rectangle
 
     window = Window(
         background=COLORS.white,
     )
     window.components = [
         Rectangle(
-            (0, 0), (100, 100),
+            position=(0, 0), size=(100, 100),
             color='blue'
         ),
         Rectangle(
@@ -22,6 +22,13 @@ if __name__ == "__main__":
             hovered={'color': "orange", 'width': 5},
             clicked={'color': "green"},
         ),
+        Circle(
+            center=(350, 50), radius=50,
+            color='red',
+            hovered={'color': "orange", 'width': 5},
+            clicked={'color': "green"},
+        ),
+
     ]
     window.open()
     window.wait_close()
