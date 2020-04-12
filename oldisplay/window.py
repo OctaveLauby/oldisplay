@@ -112,6 +112,7 @@ class Window:
                 events.append(event)
                 if event.type == pg.QUIT:
                     self.stop = True
+            self.clean()
             for component in self.components:
                 component.update(self.screen, events=events)
             pg.display.flip()  # Update the full display Surface to the screen
