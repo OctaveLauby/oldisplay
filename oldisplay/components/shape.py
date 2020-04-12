@@ -15,7 +15,7 @@ class SurfaceShape(Component):
 
         @classmethod
         @abstractmethod
-        def in_out_shape(cls, *args, **kwargs):
+        def build_cache(cls, *args, **kwargs):
             raise NotImplementedError
 
         def __init__(self, args=None, kwargs=None, look=None):
@@ -55,21 +55,12 @@ class SurfaceShape(Component):
                     look[key] = Color.get(look[key])
 
             # Build elements to draw
-            self._shape, self._outline = self.cls.in_out_shape(*args, **kwargs)
+            self._cache = self.cls.build_cache(*args, **kwargs)
 
         @property
-        def shape(self):
+        def cache(self):
             """Return surface of shape"""
-            return self._shape
-
-        @property
-        def outline(self):
-            """Return outline of shape"""
-            return self._outline
-
-        def is_within(self, position):
-            """Return whether position is within rectangle"""
-            return self.shape.collidepoint(position)
+            return self._cache
 
         @abstractmethod
         def display_(self, surface, color, outline, width):

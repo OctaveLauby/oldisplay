@@ -6,13 +6,9 @@ from .shape import SurfaceShape
 class Rectangle(SurfaceShape):
 
     @classmethod
-    def in_out_shape(cls, position, size):
+    def build_cache(cls, position, size):
         """Return shape surface and outline of rectangle"""
-        x, y = position
-        dx, dy = size
-        return pg.Rect(position, size), [
-            (x, y), (x+dx, y), (x+dx, y), (x+dx, y+dy), (x, y+dy)
-        ]
+        return pg.Rect(position, size)
 
     def __init__(self, position, size, **kwargs):
         """Initiate instance of rectangle
@@ -32,6 +28,10 @@ class Rectangle(SurfaceShape):
     def display_(self, surface, color, outline, width):
         """Display rectangle regarding given aspect"""
         if color:
-            pg.draw.rect(surface, color, self.shape)
+            pg.draw.rect(surface, color, self.cache)
         if outline and width:
-            pg.draw.lines(surface, outline, True, self.outline, width)
+            pg.draw.rect(surface, outline, self.cache, width)
+
+    def is_within(self, position):
+        """Return whether position is within rectangle"""
+        return self.cache.collidepoint(position)
