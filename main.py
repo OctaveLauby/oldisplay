@@ -29,14 +29,17 @@ if __name__ == "__main__":
             clicked={'color': "green"},
         ),
         Text(
-            (300, 200), "default text"
+            "default text",
+            (300, 200),
         ),
         Text(
-            (300, 300), "arial-color-red-center",
+            "arial-color-red-center",
+            (300, 300),
             size=30, font="arial", align="center", color="red"
         ),
         Text(
-            (300, 400), "candara-bold-italic-underline",
+            "candara-bold-italic-underline",
+            (300, 400),
             size=30, font="candara", bold=True, italic=True, underline=True,
         ),
 

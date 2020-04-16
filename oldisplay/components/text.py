@@ -19,31 +19,33 @@ class Text(Component):
         'size': 12,
         'font': None,  # default system font
         'color': "black",
+        'bold': False,
+        'italic': False,
+        'underline': False,
     }
 
-    def __init__(self, position, content,
-                 size=None, font=None, color=None,
-                 bold=False, italic=False, underline=False,
-                 align=LEFT, adjust=BOTTOM):
+    def __init__(self, content, position, align=LEFT, adjust=BOTTOM, **kwargs):
         """Initiate params of text to display
 
         Args:
-            position (2-int-tuple)  : position of text
             content (str)           : text displayed
-            size (int)              : size of font
-            font (str)              : name of font
-            color (color descr)     : color of display
-            bold (bool)             : use bold writing
-            italic  (bool)          : use italic writing
-            underline (bool)        : underline writing
+            position (2-int-tuple)  : position of text
             align (str)             : where position is regarding text (x-axis)
                 left, center or right
             adjust (str)            : where position is regarding text (y-axis)
                 bottom, center or top
+            **kwargs                : aspect of text\
+                size (int)              : size of font
+                font (str)              : name of font
+                color (color descr)     : color of display
+                bold (bool)             : use bold writing
+                italic  (bool)          : use italic writing
+                underline (bool)        : underline writing
         """
         super().__init__()
 
         # Position
+        self._content = content
         self._position = position
         self._adjust = None
         self._align = None
@@ -51,32 +53,31 @@ class Text(Component):
         self.set_align(align)
 
         # Aspect
-        self._init_params = {
-            'name': font if font else self.cls.dft_look['font'],
-            'size': size if size else self.cls.dft_look['size'],
-            'bold': bold,
-            'italic': italic,
-            'underline': underline,
-            'color': color if color else self.cls.dft_look['color'],
-            'content': content,
-        }
+        self.params = read_params(kwargs, self.cls.dft_look)
         self._font = None
         self._surf = None
 
     def init(self):
         """Initiate font and surface cache, requires pygame.init()"""
-        color = Color.get(self._init_params.pop('color'))
-        content = self._init_params.pop('content')
-        underline = self._init_params.pop('underline')
 
         # Initiate font
-        self._font = pg.font.SysFont(**self._init_params)
-        self._init_params = None
-        if underline:
+        self._font = pg.font.SysFont(
+            name=self.params.font,
+            size=self.params.size,
+            bold=self.params.bold,
+            italic=self.params.italic,
+        )
+        if self.params.underline:
             self.font.set_underline(True)
 
         # Initiate text cache
-        self._surf = self.font.render(content, True, color)
+        self._surf = self.font.render(
+            self.content, True, Color.get(self.params.color)
+        )
+
+    @property
+    def content(self):
+        return self._content
 
     @property
     def font(self):
@@ -88,19 +89,20 @@ class Text(Component):
         """Surface of text"""
         return self._surf
 
-    @property
-    def position(self):
+    def compute_position(self):
         """Bottom-Left position of text"""
         x, y = self._position
         dx, dy = self.surface.get_size()
+
+
         if self._align == RIGHT:
             x -= dx
         elif self._align == CENTER:
             x -= dx // 2
 
-        if self._align == TOP:
+        if self._adjust == TOP:
             y += dy
-        elif self._align == CENTER:
+        elif self._adjust == CENTER:
             y += dy //2
 
         return x, y
@@ -123,6 +125,8 @@ class Text(Component):
             )
         self._align = align
 
+
+
     def is_within(self, position):
         """Return whether position is within hit box"""
         x, y = position
@@ -136,4 +140,4 @@ class Text(Component):
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        surface.blit(self.surface, self.position)
+        surface.blit(self.surface, self.compute_position())
