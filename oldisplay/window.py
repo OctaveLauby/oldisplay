@@ -100,6 +100,8 @@ class Window:
     def refresh(self):
         """Keep the screen updated"""
         pg.init()
+        for component in self.components:
+            component.init()
         self.screen = pg.display.set_mode(self.settings.size)
         pg.display.set_caption(self.settings.name)
         self.clean()

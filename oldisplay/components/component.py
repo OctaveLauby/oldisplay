@@ -12,6 +12,10 @@ class Component:
         self.clicked = False
         self.hovered = False
 
+    def init(self):
+        """Initiation when pygame is initialized"""
+        pass
+
     # ----------------------------------------------------------------------- #
     # Component activation
 
