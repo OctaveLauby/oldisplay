@@ -131,14 +131,13 @@ class Text(Component):
         x, y = self._position
         dx, dy = self.surface.get_size()
 
-
         if self._align == RIGHT:
             x -= dx
         elif self._align == CENTER:
             x -= dx // 2
 
-        if self._adjust == TOP:
-            y += dy
+        if self._adjust == BOTTOM:
+            y -= dy
         elif self._adjust == CENTER:
             y += dy //2
 
@@ -178,7 +177,7 @@ class Text(Component):
         surface.blit(self.surface, self.compute_position())
 
     def display_hovered(self, surface):
-        """Basic display of element
+        """Hovered display of element
 
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
@@ -188,7 +187,7 @@ class Text(Component):
         surface.blit(self.hover_txt.surface, self.hover_txt.compute_position())
 
     def display_clicked(self, surface):
-        """Basic display of element
+        """Clicked display of element
 
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)

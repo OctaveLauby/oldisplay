@@ -43,11 +43,25 @@ if __name__ == "__main__":
             size=20, font="candara", bold=True, italic=True, underline=True,
         ),
         Text(
-            "candara-bold-italic-underline-click",
+            "candara-center-hover",
             (300, 350),
+            size=20, font="candara", italic=True, align="center",
+            hovered={'font': "arial", 'underline':True}
+
+        ),
+        Text(
+            "candara-center-click",
+            (300, 400),
             size=20, font="candara", italic=True, align="center",
             clicked={'font': None, 'bold':True}
 
+        ),
+        Text(
+            "candara-center-hover-click",
+            (300, 450),
+            size=20, font="candara", italic=True, align="center",
+            hovered={'font': "arial", 'underline':True},
+            clicked={'font': None, 'bold':True},
         ),
 
     ]
