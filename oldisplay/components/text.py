@@ -34,7 +34,7 @@ class Text(Component):
                 left, center or right
             adjust (str)            : where position is regarding text (y-axis)
                 bottom, center or top
-            **kwargs                : aspect of text\
+            **kwargs                : aspect of text
                 size (int)              : size of font
                 font (str)              : name of font
                 color (color descr)     : color of display
