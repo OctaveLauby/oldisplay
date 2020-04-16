@@ -52,28 +52,56 @@ class Text(Component):
         self.set_adjust(adjust)
         self.set_align(align)
 
-        # Aspect
+        # Aspect params
+        hovered = kwargs.pop('hovered', None)
+        clicked = kwargs.pop('clicked', None)
         self.params = read_params(kwargs, self.cls.dft_look)
+        self._hovered = None
+        self._clicked = None
+        if hovered is not None:
+            hovered = read_params(hovered, self.params)
+        if clicked and hovered:
+            clicked = read_params(clicked, hovered)
+        elif clicked:
+            clicked = read_params(clicked, self.params)
+
+        # Aspect cache
         self._font = None
         self._surf = None
+        self._h_txt = (
+            None if hovered is None
+            else Text(content, position, align=align, adjust=adjust, **hovered)
+        )
+        self._c_txt = (
+            None if clicked is None
+            else Text(content, position, align=align, adjust=adjust, **clicked)
+        )
+
 
     def init(self):
         """Initiate font and surface cache, requires pygame.init()"""
 
         # Initiate font
-        self._font = pg.font.SysFont(
+        font = pg.font.SysFont(
             name=self.params.font,
             size=self.params.size,
             bold=self.params.bold,
             italic=self.params.italic,
         )
         if self.params.underline:
-            self.font.set_underline(True)
+            font.set_underline(True)
 
         # Initiate text cache
-        self._surf = self.font.render(
+        surface = font.render(
             self.content, True, Color.get(self.params.color)
         )
+
+        # Update
+        self._font, self._surf = font, surface
+        if self.hover_txt is not None:
+            self.hover_txt.init()
+        if self.click_txt is not None:
+            self.click_txt.init()
 
     @property
     def content(self):
@@ -89,6 +117,14 @@ class Text(Component):
     def surface(self):
         """Surface of text (pygame.Surface)"""
         return self._surf
+
+    @property
+    def hover_txt(self):
+        return self._h_txt
+
+    @property
+    def click_txt(self):
+        return self._c_txt
 
     def compute_position(self):
         """Bottom-Left position of text (2-int-tuple)"""
@@ -129,7 +165,7 @@ class Text(Component):
     def is_within(self, position):
         """Return whether position is within hit box"""
         x, y = position
-        sx, sy = self.surface.get_offset()
+        sx, sy = self.compute_position()
         dx, dy = self.surface.get_size()
         return (sx < x < sx+dx) and (sy < y < sy+dy)
 
@@ -140,3 +176,23 @@ class Text(Component):
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
         surface.blit(self.surface, self.compute_position())
+
+    def display_hovered(self, surface):
+        """Basic display of element
+
+        Args:
+            surface (pygame.Surface): surface to draw on (can be a screen)
+        """
+        if self.hover_txt is None:
+            return self.display_normal(surface)
+        surface.blit(self.hover_txt.surface, self.hover_txt.compute_position())
+
+    def display_clicked(self, surface):
+        """Basic display of element
+
+        Args:
+            surface (pygame.Surface): surface to draw on (can be a screen)
+        """
+        if self.click_txt is None:
+            return self.display_normal(surface)
+        surface.blit(self.click_txt.surface, self.click_txt.compute_position())

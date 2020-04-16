@@ -34,13 +34,20 @@ if __name__ == "__main__":
         ),
         Text(
             "arial-color-red-center",
-            (300, 300),
-            size=30, font="arial", align="center", color="red"
+            (300, 250),
+            size=20, font="arial", align="center", color="red"
         ),
         Text(
             "candara-bold-italic-underline",
-            (300, 400),
-            size=30, font="candara", bold=True, italic=True, underline=True,
+            (300, 300),
+            size=20, font="candara", bold=True, italic=True, underline=True,
+        ),
+        Text(
+            "candara-bold-italic-underline-click",
+            (300, 350),
+            size=20, font="candara", italic=True, align="center",
+            clicked={'font': None, 'bold':True}
+
         ),
 
     ]
