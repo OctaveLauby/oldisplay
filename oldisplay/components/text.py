@@ -24,11 +24,11 @@ class Text(Component):
         'underline': False,
     }
 
-    def __init__(self, content, position, align=LEFT, adjust=BOTTOM, **kwargs):
+    def __init__(self, string, position, align=LEFT, adjust=BOTTOM, **kwargs):
         """Initiate params of text to display
 
         Args:
-            content (str)           : text displayed
+            string (str)            : text displayed
             position (2-int-tuple)  : position of text
             align (str)             : where position is regarding text (x-axis)
                 left, center or right
@@ -45,7 +45,7 @@ class Text(Component):
         super().__init__()
 
         # Position
-        self._content = content
+        self._string = string
         self._position = position
         self._adjust = None
         self._align = None
@@ -70,11 +70,11 @@ class Text(Component):
         self._surf = None
         self._h_txt = (
             None if hovered is None
-            else Text(content, position, align=align, adjust=adjust, **hovered)
+            else Text(string, position, align=align, adjust=adjust, **hovered)
         )
         self._c_txt = (
             None if clicked is None
-            else Text(content, position, align=align, adjust=adjust, **clicked)
+            else Text(string, position, align=align, adjust=adjust, **clicked)
         )
 
 
@@ -93,7 +93,7 @@ class Text(Component):
 
         # Initiate text cache
         surface = font.render(
-            self.content, True, Color.get(self.params.color)
+            self.string, True, Color.get(self.params.color)
         )
 
         # Update
@@ -104,9 +104,9 @@ class Text(Component):
             self.click_txt.init()
 
     @property
-    def content(self):
+    def string(self):
         """Text displayed (str)"""
-        return self._content
+        return self._string
 
     @property
     def font(self):
@@ -130,7 +130,6 @@ class Text(Component):
         """Bottom-Left position of text (2-int-tuple)"""
         x, y = self._position
         dx, dy = self.surface.get_size()
-
         if self._align == RIGHT:
             x -= dx
         elif self._align == CENTER:
@@ -140,7 +139,6 @@ class Text(Component):
             y -= dy
         elif self._adjust == CENTER:
             y += dy //2
-
         return x, y
 
     def set_adjust(self, adjust):
