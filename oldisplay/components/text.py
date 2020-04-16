@@ -2,7 +2,7 @@ import pygame as pg
 from olutils import read_params
 
 from oldisplay.collections import Color
-from .component import Component
+from .component import DynamicComponent
 
 TOP = "top"
 BOTTOM = "bottom"
@@ -13,7 +13,8 @@ ADJUSTMENTS = [BOTTOM, CENTER, TOP]
 ALIGNMENTS = [LEFT, CENTER, RIGHT]
 
 
-class Text(Component):
+class DynamicText(DynamicComponent):
+    """Text with look change when hovered or clicked"""
 
     dft_look = {
         'size': 12,
@@ -26,6 +27,9 @@ class Text(Component):
 
     def __init__(self, string, position, align=LEFT, adjust=BOTTOM, **kwargs):
         """Initiate params of text to display
+
+        About:
+            Requires call to init method for component to be usable
 
         Args:
             string (str)            : text displayed
@@ -70,11 +74,15 @@ class Text(Component):
         self._surf = None
         self._h_txt = (
             None if hovered is None
-            else Text(string, position, align=align, adjust=adjust, **hovered)
+            else self.cls(
+                string, position, align=align, adjust=adjust, **hovered
+            )
         )
         self._c_txt = (
             None if clicked is None
-            else Text(string, position, align=align, adjust=adjust, **clicked)
+            else self.cls(
+                string, position, align=align, adjust=adjust, **clicked
+            )
         )
 
 

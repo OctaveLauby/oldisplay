@@ -1,7 +1,7 @@
 if __name__ == "__main__":
     from oldisplay import Window
     from oldisplay.collections import COLORS
-    from oldisplay.components import Circle, Rectangle, Text
+    import oldisplay.components as components
 
     x_max, y_max = 700, 700
 
@@ -10,57 +10,57 @@ if __name__ == "__main__":
         size=(x_max, y_max),
     )
     window.components = [
-        Rectangle(
+        components.DynamicRectangle(
             position=(0, 0), size=(100, 100),
             color='blue'
         ),
-        Rectangle(
+        components.DynamicRectangle(
             (100, 0), (100, 100),
             color='green', outline='purple', width=5,
             hovered={'color': "blue"},
         ),
-        Rectangle(
+        components.DynamicRectangle(
             (200, 0), (100, 100),
             color='red',
             hovered={'color': "orange", 'width': 5},
             clicked={'color': "green"},
         ),
-        Circle(
+        components.DynamicDisk(
             center=(350, 50), radius=50,
             color='red',
             hovered={'color': "orange", 'width': 5},
             clicked={'color': "green"},
         ),
-        Text("top-left", (0, 0), adjust="top"),
-        Text("top-center", (x_max//2, 0), adjust="top", align="center"),
-        Text("top-right", (x_max, 0), adjust="top", align="right"),
-        Text("bot-left", (0, y_max), adjust="bottom"),
-        Text("bot-center", (x_max//2, y_max), adjust="bottom", align="center"),
-        Text("bot-right", (x_max, y_max), adjust="bottom", align="right"),
-        Text(
+        components.DynamicText("top-left", (0, 0), adjust="top"),
+        components.DynamicText("top-center", (x_max//2, 0), adjust="top", align="center"),
+        components.DynamicText("top-right", (x_max, 0), adjust="top", align="right"),
+        components.DynamicText("bot-left", (0, y_max), adjust="bottom"),
+        components.DynamicText("bot-center", (x_max//2, y_max), adjust="bottom", align="center"),
+        components.DynamicText("bot-right", (x_max, y_max), adjust="bottom", align="right"),
+        components.DynamicText(
             "arial-20-red", (300, 250), align="center",
             font="arial", size=20, color="red"
         ),
-        Text(
+        components.DynamicText(
             "candara-20-bold-italic-underline",
             (300, 300), align="center",
             font="candara", size=20, bold=True, italic=True, underline=True,
         ),
-        Text(
+        components.DynamicText(
             "italic_hover-underline",
             (300, 350), align="center",
             size=20, font="candara", italic=True,
             hovered={'font': "arial", 'underline':True}
 
         ),
-        Text(
+        components.DynamicText(
             "italic_click-bold",
             (300, 400), align="center",
             size=20,  font="candara", italic=True,
             clicked={'font': None, 'bold':True}
 
         ),
-        Text(
+        components.DynamicText(
             "italic_hover-underline_click-bold",
             (300, 450), align="center",
             size=20,  font = "candara", italic = True,

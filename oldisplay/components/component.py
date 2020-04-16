@@ -1,10 +1,42 @@
 import pygame as pg
 from abc import ABC, abstractmethod
 
-class Component:
-    """Base for components of a screen"""
+
+class Component(ABC):
+    """Base class for components of a surface
+
+    To Implement:
+
+        # update
+            update display
+    """
+
+    def init(self):
+        """Additional initiation to do once pygame is initialized"""
+        pass
+
+    @abstractmethod
+    def update(self, surface, events=None):
+        """Update display on surface"""
+        pass
+
+
+class DynamicComponent(Component):
+    """Base for components of a surface
+
+    To Implement:
+
+        # is_within
+            Return whether a position is within component
+
+        # display_normal
+            Method to display shape given args=(surface, color, outline, width)
+    """
 
     def __init__(self):
+        """Initiate instance of component"""
+        super().__init__()
+
         self._enabled = True
         self._visible = True
 
@@ -13,7 +45,7 @@ class Component:
         self.hovered = False
 
     def init(self):
-        """Initiation when pygame is initialized"""
+        """Additional initiation to do once pygame is initialized"""
         pass
 
     # ----------------------------------------------------------------------- #
@@ -21,10 +53,12 @@ class Component:
 
     @property
     def enabled(self):
+        """Whether interactions are enabled"""
         return self._enabled
 
     @property
     def visible(self):
+        """Whether component should be displayed"""
         return self._visible
 
     def enable(self):
@@ -37,10 +71,12 @@ class Component:
 
     @property
     def cls(self):
+        """Class of component"""
         return self.__class__
 
     @property
     def clsname(self):
+        """Class name of component"""
         return self.cls.__name__
 
     def __str__(self):

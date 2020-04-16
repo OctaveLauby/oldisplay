@@ -1,3 +1,3 @@
-from .circle import Circle
-from .rectangle import Rectangle
-from .text import Text
+from .disk import DynamicDisk
+from .rectangle import DynamicRectangle
+from .text import DynamicText

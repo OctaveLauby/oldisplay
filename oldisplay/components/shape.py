@@ -2,13 +2,21 @@ from abc import abstractmethod
 from olutils import read_params
 
 from oldisplay.collections import Color
-from .component import Component
+from .component import DynamicComponent
 
 
-class SurfaceShape(Component):
+class SurfaceShape(DynamicComponent):
     """Base class for 2d shapes
 
     Handle an outline and look changes when hovered or clicked
+
+    To Implement:
+
+        # build_cache
+            Fills _cache attribute, accessible through cache property
+
+        # display_
+            Method to display shape given args=(surface, color, outline, width)
     """
 
     dft_look = {
@@ -20,6 +28,10 @@ class SurfaceShape(Component):
     @classmethod
     @abstractmethod
     def build_cache(cls, *args, **kwargs):
+        """Build cache necessary to display shape
+
+
+        """
         raise NotImplementedError
 
     def __init__(self, args=None, kwargs=None, look=None):
