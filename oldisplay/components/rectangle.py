@@ -17,11 +17,11 @@ class Rectangle(SurfaceShape):
             position (2-int-tuple)  : position of top-right on surface
             size (2-int-tuple)      : size of rectangle
             **kwargs                : aspect description
-                color (color description)   : inside color
-                outline (color description) : outline color
-                width (int)                 : width of border
-                hovered (dict)              : aspect when mouse hover rect
-                clicked (dict)              : aspect when user click on rect
+                color (color desc)      : inside color
+                outline (color desc)    : outline color
+                width (int)             : width of border
+                hovered (dict)          : aspect when mouse hover rect
+                clicked (dict)          : aspect when user click on rect
         """
         super().__init__(args=(position, size), look=kwargs)
 
