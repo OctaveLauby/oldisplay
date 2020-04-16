@@ -25,7 +25,22 @@ class Text(Component):
                  size=None, font=None, color=None,
                  bold=False, italic=False, underline=False,
                  align=LEFT, adjust=BOTTOM):
+        """Initiate params of text to display
 
+        Args:
+            position (2-int-tuple)  : position of text
+            content (str)           : text displayed
+            size (int)              : size of font
+            font (str)              : name of font
+            color (color descr)     : color of display
+            bold (bool)             : use bold writing
+            italic  (bool)          : use italic writing
+            underline (bool)        : underline writing
+            align (str)             : where position is regarding text (x-axis)
+                left, center or right
+            adjust (str)            : where position is regarding text (y-axis)
+                bottom, center or top
+        """
         super().__init__()
 
         # Position
@@ -49,7 +64,7 @@ class Text(Component):
         self._surf = None
 
     def init(self):
-        """Initiate font"""
+        """Initiate font and surface cache, requires pygame.init()"""
         color = Color.get(self._init_params.pop('color'))
         content = self._init_params.pop('content')
         underline = self._init_params.pop('underline')
@@ -58,28 +73,37 @@ class Text(Component):
         self._font = pg.font.SysFont(**self._init_params)
         self._init_params = None
         if underline:
-            self._font.set_underline()
+            self.font.set_underline(True)
 
         # Initiate text cache
-        self._surf = self._font.render(content, True, color)
+        self._surf = self.font.render(content, True, color)
+
+    @property
+    def font(self):
+        """Font of text"""
+        return self._font
 
     @property
     def surface(self):
+        """Surface of text"""
         return self._surf
 
     @property
     def position(self):
-        # TODO: manage adjust and align
-        return self._position
+        """Bottom-Left position of text"""
+        x, y = self._position
+        dx, dy = self.surface.get_size()
+        if self._align == RIGHT:
+            x -= dx
+        elif self._align == CENTER:
+            x -= dx // 2
 
-    def get_aspect(self):
-        return {
-            # 'font': self.font.name,  # TODO: find way to get font name
-            'size': self.font.get_height(),
-            'bold': self.font.get_bold(),
-            'italic': self.font.get_italic(),
-            'underline': self.font.get_underline(),
-        }
+        if self._align == TOP:
+            y += dy
+        elif self._align == CENTER:
+            y += dy //2
+
+        return x, y
 
     def set_adjust(self, adjust):
         """Set kind of adjustment (bottom, center or top)"""
@@ -101,8 +125,10 @@ class Text(Component):
 
     def is_within(self, position):
         """Return whether position is within hit box"""
-        # TODO: implement is within for text and add hovered color
-        pass
+        x, y = position
+        sx, sy = self.surface.get_offset()
+        dx, dy = self.surface.get_size()
+        return (sx < x < sx+dx) and (sy < y < sy+dy)
 
     def display_normal(self, surface):
         """Basic display of element

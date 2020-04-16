@@ -35,6 +35,10 @@ if __name__ == "__main__":
             (300, 300), "arial-color-red-center",
             size=30, font="arial", align="center", color="red"
         ),
+        Text(
+            (300, 400), "candara-bold-italic-underline",
+            size=30, font="candara", bold=True, italic=True, underline=True,
+        ),
 
     ]
     window.open()
