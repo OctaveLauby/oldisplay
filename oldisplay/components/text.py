@@ -77,20 +77,21 @@ class Text(Component):
 
     @property
     def content(self):
+        """Text displayed (str)"""
         return self._content
 
     @property
     def font(self):
-        """Font of text"""
+        """Font of text (pygame.font.Font)"""
         return self._font
 
     @property
     def surface(self):
-        """Surface of text"""
+        """Surface of text (pygame.Surface)"""
         return self._surf
 
     def compute_position(self):
-        """Bottom-Left position of text"""
+        """Bottom-Left position of text (2-int-tuple)"""
         x, y = self._position
         dx, dy = self.surface.get_size()
 
@@ -108,7 +109,7 @@ class Text(Component):
         return x, y
 
     def set_adjust(self, adjust):
-        """Set kind of adjustment (bottom, center or top)"""
+        """Set kind of adjustment ('bottom', 'center' or 'top')"""
         if adjust not in ADJUSTMENTS:
             raise ValueError(
                 f"Unknown value for adjustment {adjust}"
@@ -117,15 +118,13 @@ class Text(Component):
         self._adjust = adjust
 
     def set_align(self, align):
-        """Set kind of alignment (left, center or right)"""
+        """Set kind of alignment ('left', 'center' or 'right')"""
         if align not in ALIGNMENTS:
             raise ValueError(
                 f"Unknown value for alignment {align}"
                 f", must be within {ALIGNMENTS}"
             )
         self._align = align
-
-
 
     def is_within(self, position):
         """Return whether position is within hit box"""
