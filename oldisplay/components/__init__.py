@@ -6,4 +6,4 @@ from .line import (
     LineSet,
 )
 from .rectangle import ActiveRectangle
-from .text import ActiveText
+from .text import ActiveText, Text

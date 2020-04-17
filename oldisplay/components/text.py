@@ -2,7 +2,7 @@ import pygame as pg
 from olutils import read_params
 
 from oldisplay.collections import Color
-from .component import ActiveComponent
+from .component import ActiveComponent, Component
 
 TOP = "top"
 BOTTOM = "bottom"
@@ -13,8 +13,9 @@ ADJUSTMENTS = [BOTTOM, CENTER, TOP]
 ALIGNMENTS = [LEFT, CENTER, RIGHT]
 
 
-class ActiveText(ActiveComponent):
-    """Text with look change when hovered or clicked"""
+
+class Text(Component):
+    """Basic text"""
 
     dft_look = {
         'size': 12,
@@ -57,33 +58,11 @@ class ActiveText(ActiveComponent):
         self.set_align(align)
 
         # Aspect params
-        hovered = kwargs.pop('hovered', None)
-        clicked = kwargs.pop('clicked', None)
         self.params = read_params(kwargs, self.cls.dft_look)
-        self._hovered = None
-        self._clicked = None
-        if hovered is not None:
-            hovered = read_params(hovered, self.params)
-        if clicked and hovered:
-            clicked = read_params(clicked, hovered)
-        elif clicked:
-            clicked = read_params(clicked, self.params)
 
         # Aspect cache
         self._font = None
         self._surf = None
-        self._h_txt = (
-            None if hovered is None
-            else self.cls(
-                string, position, align=align, adjust=adjust, **hovered
-            )
-        )
-        self._c_txt = (
-            None if clicked is None
-            else self.cls(
-                string, position, align=align, adjust=adjust, **clicked
-            )
-        )
 
 
     def init(self):
@@ -106,10 +85,6 @@ class ActiveText(ActiveComponent):
 
         # Update
         self._font, self._surf = font, surface
-        if self.hover_txt is not None:
-            self.hover_txt.init()
-        if self.click_txt is not None:
-            self.click_txt.init()
 
     @property
     def string(self):
@@ -125,14 +100,6 @@ class ActiveText(ActiveComponent):
     def surface(self):
         """Surface of text (pygame.Surface)"""
         return self._surf
-
-    @property
-    def hover_txt(self):
-        return self._h_txt
-
-    @property
-    def click_txt(self):
-        return self._c_txt
 
     def compute_position(self):
         """Top-Left position of text (2-int-tuple)"""
@@ -167,14 +134,7 @@ class ActiveText(ActiveComponent):
             )
         self._align = align
 
-    def is_within(self, position):
-        """Return whether position is within hit box"""
-        x, y = position
-        sx, sy = self.compute_position()
-        dx, dy = self.surface.get_size()
-        return (sx < x < sx+dx) and (sy < y < sy+dy)
-
-    def display_normal(self, surface):
+    def update(self, surface, events=None):
         """Basic display of element
 
         Args:
@@ -182,15 +142,105 @@ class ActiveText(ActiveComponent):
         """
         surface.blit(self.surface, self.compute_position())
 
+
+class ActiveText(ActiveComponent):
+    """Text with look change when hovered or clicked"""
+
+    def __init__(self, string, position, align=LEFT, adjust=BOTTOM,
+                 hovered=None, clicked=None, **kwargs):
+        """Initiate params of text to display
+
+        About:
+            Requires call to init method for component to be usable
+
+        Args:
+            string (str)            : text displayed
+            position (2-int-tuple)  : position of text
+            align (str)             : where position is regarding text (x-axis)
+                left, center or right
+            adjust (str)            : where position is regarding text (y-axis)
+                bottom, center or top
+            hovered (dict)          : aspect of text when hovered
+            clicked (dict)          : aspect of text when clicked
+            **kwargs                : aspect of text
+                size (int)              : size of font
+                font (str)              : name of font
+                color (color descr)     : color of display
+                bold (bool)             : use bold writing
+                italic  (bool)          : use italic writing
+                underline (bool)        : underline writing
+
+        """
+        super().__init__()
+
+        # Aspect params
+        normal = read_params(kwargs, Text.dft_look)
+        if hovered is not None:
+            hovered = read_params(hovered, normal)
+        if clicked and hovered:
+            clicked = read_params(clicked, hovered)
+        elif clicked:
+            clicked = read_params(clicked, normal)
+
+        # Aspect cache
+        self._n_txt = Text(
+                string, position, align=align, adjust=adjust, **normal
+        )
+        self._h_txt = (
+            None if hovered is None
+            else Text(
+                string, position, align=align, adjust=adjust, **hovered
+            )
+        )
+        self._c_txt = (
+            None if clicked is None
+            else Text(
+                string, position, align=align, adjust=adjust, **clicked
+            )
+        )
+
+    def init(self):
+        """Initiate font and surface cache, requires pygame.init()"""
+        self._n_txt.init()
+        if self._h_txt:
+            self._h_txt.init()
+        if self._c_txt:
+            self._c_txt.init()
+
+    @property
+    def normal_txt(self):
+        """Normal text"""
+        return self._n_txt
+
+    @property
+    def hover_txt(self):
+        """Hovered text"""
+        if self._h_txt is None:
+            return self.normal_txt
+        return self._h_txt
+
+    @property
+    def click_txt(self):
+        """Clicked text"""
+        if self._c_txt is None:
+            return self.hover_txt
+        return self._c_txt
+
+    def display_normal(self, surface):
+        """Basic display of element
+
+        Args:
+            surface (pygame.Surface): surface to draw on (can be a screen)
+        """
+        self.normal_txt.update(surface)
+
     def display_hovered(self, surface):
         """Hovered display of element
 
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        if self.hover_txt is None:
-            return self.display_normal(surface)
-        surface.blit(self.hover_txt.surface, self.hover_txt.compute_position())
+        self.hover_txt.update(surface)
 
     def display_clicked(self, surface):
         """Clicked display of element
@@ -198,6 +248,12 @@ class ActiveText(ActiveComponent):
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        if self.click_txt is None:
-            return self.display_normal(surface)
-        surface.blit(self.click_txt.surface, self.click_txt.compute_position())
+        self.click_txt.update(surface)
+
+
+    def is_within(self, position):
+        """Return whether position is within hit box"""
+        x, y = position
+        sx, sy = self.normal_txt.compute_position()
+        dx, dy = self.normal_txt.surface.get_size()
+        return (sx < x < sx+dx) and (sy < y < sy+dy)
