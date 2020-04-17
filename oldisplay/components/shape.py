@@ -2,7 +2,7 @@ from abc import abstractmethod
 from olutils import read_params
 
 from oldisplay.collections import Color
-from .component import DynamicComponent
+from .component import Component, DynamicComponent
 
 
 class DynamicShape(DynamicComponent):
@@ -73,3 +73,25 @@ class DynamicShape(DynamicComponent):
         if self._look_c is None:
             return self.display_hovered(surface, *args, **kwargs)
         return self.display_(surface, **self._look_c)
+
+
+class LinearShape(Component):
+    """Base class for linear shapes
+
+    To Implement:
+
+        # update
+            Method to display shape
+    """
+
+    dft_look = {
+        'color': "black",
+        'width': 2,
+    }
+
+    def __init__(self, look=None):
+        """Initiate a linear shape"""
+        super().__init__()
+        look = read_params(look, self.cls.dft_look)
+        self.color = Color.get(look.color)
+        self.width = look.width

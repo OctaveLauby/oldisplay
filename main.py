@@ -10,6 +10,9 @@ if __name__ == "__main__":
         size=(x_max, y_max),
     )
     window.components = [
+        components.Grid(
+            dx=50, dy=50, color="gray", width=1,
+        ),
         components.DynamicRectangle(
             position=(0, 0), size=(100, 100),
             color='blue'
