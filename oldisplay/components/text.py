@@ -135,7 +135,7 @@ class ActiveText(ActiveComponent):
         return self._c_txt
 
     def compute_position(self):
-        """Bottom-Left position of text (2-int-tuple)"""
+        """Top-Left position of text (2-int-tuple)"""
         x, y = self._position
         dx, dy = self.surface.get_size()
         if self._align == RIGHT:
