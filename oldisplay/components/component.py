@@ -25,6 +25,22 @@ class Component(ABC):
         """Update display on surface"""
         pass
 
+    # ----------------------------------------------------------------------- #
+    # Utils
+
+    @property
+    def cls(self):
+        """Class of component"""
+        return self.__class__
+
+    @property
+    def clsname(self):
+        """Class name of component"""
+        return self.cls.__name__
+
+    def __str__(self):
+        return f"<{self.clsname} {id(self)}>"
+
 
 class DynamicComponent(Component):
     """Base for components of a surface
@@ -96,19 +112,6 @@ class DynamicComponent(Component):
     def disable(self):
         """Deactivate interactions with component"""
         self._enabled = False
-
-    @property
-    def cls(self):
-        """Class of component"""
-        return self.__class__
-
-    @property
-    def clsname(self):
-        """Class name of component"""
-        return self.cls.__name__
-
-    def __str__(self):
-        return f"<{self.clsname} {id(self)}>"
 
     # ----------------------------------------------------------------------- #
     # Component management
