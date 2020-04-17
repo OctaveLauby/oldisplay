@@ -20,7 +20,7 @@ class DynamicDisk(DynamicShape):
                 hovered (dict)              : aspect when mouse hover rect
                 clicked (dict)              : aspect when user click on rect
         """
-        super().__init__(look=kwargs)
+        super().__init__(**kwargs)
         self.cache = (np.array(center), int(radius))
 
     def display_(self, surface, color, outline, width):

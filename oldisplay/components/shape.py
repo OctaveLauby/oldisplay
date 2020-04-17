@@ -22,11 +22,11 @@ class DynamicShape(DynamicComponent):
         'width': None,
     }
 
-    def __init__(self, look=None):
+    def __init__(self, **kwargs):
         """Initialize instance of 2d-shape
 
         Args:
-            look (dict)     : aspect description
+            **kwargs    : aspect of shape
                 color (color description)   : inside color
                 outline (color description) : outline color
                 width (int)                 : width of outline
@@ -34,12 +34,11 @@ class DynamicShape(DynamicComponent):
                 clicked (dict)              : aspect when click on shape
         """
         super().__init__()
-        look = {} if look is None else look
 
         # Read Looks
-        hovered = look.pop('hovered', None)
-        clicked = look.pop('clicked', None)
-        self._look = read_params(look, self.cls.dft_look)
+        hovered = kwargs.pop('hovered', None)
+        clicked = kwargs.pop('clicked', None)
+        self._look = read_params(kwargs, self.cls.dft_look)
         self._look_h = (
             None if hovered is None
             else read_params(hovered, self._look)
@@ -89,9 +88,15 @@ class LinearShape(Component):
         'width': 2,
     }
 
-    def __init__(self, look=None):
-        """Initiate a linear shape"""
+    def __init__(self, **kwargs):
+        """Initiate a linear shape
+
+        Args:
+            **params    : aspect of shape
+                color (color descr) : color of lines
+                width (int)         : width of lines
+        """
         super().__init__()
-        look = read_params(look, self.cls.dft_look)
+        look = read_params(kwargs, self.cls.dft_look)
         self.color = Color.get(look.color)
         self.width = look.width

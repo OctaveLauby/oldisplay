@@ -30,7 +30,7 @@ class Segment(LinearShape):
 
     def __init__(self, p1, p2, **kwargs):
         """Initialize a segment"""
-        super().__init__(look=kwargs)
+        super().__init__(**kwargs)
         self.p1 = p1
         self.p2 = p2
 
@@ -43,12 +43,13 @@ class Line(LinearShape):
 
     def __init__(self, points, **kwargs):
         """Initialize a line"""
-        super().__init__(look=kwargs)
+        super().__init__(**kwargs)
         self.points = points
 
     def update(self, surface, events=None):
         """Display line"""
         draw_line(surface, self.points, self.color, self.width)
+
 
 class LineSet(LinearShape):
 

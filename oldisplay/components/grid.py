@@ -6,7 +6,7 @@ class Grid(LineSet):
     def __init__(self, dx, dy, **kwargs):
         """Initiate a grid"""
         assert dx > 0, dy > 0
-        super().__init__(lines=None, look=kwargs)
+        super().__init__(lines=None, **kwargs)
         self.dx = dx
         self.dy = dy
 
