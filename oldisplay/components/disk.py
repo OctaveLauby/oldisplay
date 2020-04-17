@@ -1,10 +1,10 @@
 import numpy as np
 import pygame as pg
 
-from .shape import SurfaceShape
+from .shape import DynamicShape
 
 
-class DynamicDisk(SurfaceShape):
+class DynamicDisk(DynamicShape):
     """Disk w. potential outline & look change when hovered or clicked"""
 
     @classmethod

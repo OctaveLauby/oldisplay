@@ -1,9 +1,9 @@
 import pygame as pg
 
-from .shape import SurfaceShape
+from .shape import DynamicShape
 
 
-class DynamicRectangle(SurfaceShape):
+class DynamicRectangle(DynamicShape):
     """Rectangle w. potential outline & look change when hovered or clicked"""
 
     @classmethod

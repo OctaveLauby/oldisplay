@@ -5,8 +5,8 @@ from oldisplay.collections import Color
 from .component import DynamicComponent
 
 
-class SurfaceShape(DynamicComponent):
-    """Base class for 2d shapes
+class DynamicShape(DynamicComponent):
+    """Base class for 2d shapes with look change when hovered or clicked
 
     Handle an outline and look changes when hovered or clicked
 

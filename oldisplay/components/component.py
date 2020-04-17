@@ -9,6 +9,11 @@ class Component(ABC):
 
         # update
             update display
+
+    Optional:
+
+        # init
+            additional initiation for once pygame is initialized
     """
 
     def init(self):
@@ -30,7 +35,30 @@ class DynamicComponent(Component):
             Return whether a position is within component
 
         # display_normal
-            Method to display shape given args=(surface, color, outline, width)
+            Method to display shape
+
+    Optional
+
+        # init
+            additional initiation for once pygame is initialized
+
+        # display_hovered
+            Method to display shape when hovered
+
+        # display_clicked
+            Method to display shape when clicked
+
+        # act_click
+            Method called after click on component
+
+        # act_release_click
+            Method called after click and release on component
+
+        # act_release_only
+            Method called after release on component (but no click on it)
+
+        # act_release_out
+            Method called after click on component and release outside
     """
 
     def __init__(self):
