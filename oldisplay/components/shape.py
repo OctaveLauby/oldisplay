@@ -2,10 +2,10 @@ from abc import abstractmethod
 from olutils import read_params
 
 from oldisplay.collections import Color
-from .component import Component, DynamicComponent
+from .component import Component, ActiveComponent
 
 
-class DynamicShape(DynamicComponent):
+class ActiveShape(ActiveComponent):
     """Base class for 2d shapes with look change when hovered or clicked
 
     Handle an outline and look changes when hovered or clicked

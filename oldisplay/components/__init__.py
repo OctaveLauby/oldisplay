@@ -1,9 +1,9 @@
-from .disk import DynamicDisk
+from .disk import ActiveDisk
 from .grid import Grid
 from .line import (
     Segment,
     Line,
     LineSet,
 )
-from .rectangle import DynamicRectangle
-from .text import DynamicText
+from .rectangle import ActiveRectangle
+from .text import ActiveText

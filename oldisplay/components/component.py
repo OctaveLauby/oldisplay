@@ -42,7 +42,7 @@ class Component(ABC):
         return f"<{self.clsname} {id(self)}>"
 
 
-class DynamicComponent(Component):
+class ActiveComponent(Component):
     """Base for components of a surface
 
     To Implement:

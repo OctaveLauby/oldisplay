@@ -2,7 +2,7 @@ import pygame as pg
 from olutils import read_params
 
 from oldisplay.collections import Color
-from .component import DynamicComponent
+from .component import ActiveComponent
 
 TOP = "top"
 BOTTOM = "bottom"
@@ -13,7 +13,7 @@ ADJUSTMENTS = [BOTTOM, CENTER, TOP]
 ALIGNMENTS = [LEFT, CENTER, RIGHT]
 
 
-class DynamicText(DynamicComponent):
+class ActiveText(ActiveComponent):
     """Text with look change when hovered or clicked"""
 
     dft_look = {
