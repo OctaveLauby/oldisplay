@@ -6,13 +6,8 @@ from .shape import DynamicShape
 class DynamicRectangle(DynamicShape):
     """Rectangle w. potential outline & look change when hovered or clicked"""
 
-    @classmethod
-    def build_cache(cls, position, size):
-        """Return shape surface and outline of rectangle"""
-        return pg.Rect(position, size)
-
     def __init__(self, position, size, **kwargs):
-        """Initiate instance of rectangle
+        """Initialize instance of rectangle
 
         Args:
             position (2-int-tuple)  : position of top-right on surface
@@ -24,7 +19,8 @@ class DynamicRectangle(DynamicShape):
                 hovered (dict)          : aspect when mouse hover rect
                 clicked (dict)          : aspect when user click on rect
         """
-        super().__init__(args=(position, size), look=kwargs)
+        super().__init__(look=kwargs)
+        self.cache = pg.Rect(position, size)
 
     def display_(self, surface, color, outline, width):
         """Display rectangle regarding given aspect"""

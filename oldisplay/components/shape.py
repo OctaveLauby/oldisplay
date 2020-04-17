@@ -12,9 +12,6 @@ class DynamicShape(DynamicComponent):
 
     To Implement:
 
-        # build_cache
-            Fills _cache attribute, accessible through cache property
-
         # display_
             Method to display shape given args=(surface, color, outline, width)
     """
@@ -25,21 +22,10 @@ class DynamicShape(DynamicComponent):
         'width': None,
     }
 
-    @classmethod
-    @abstractmethod
-    def build_cache(cls, *args, **kwargs):
-        """Build cache necessary to display shape
-
-
-        """
-        raise NotImplementedError
-
-    def __init__(self, args=None, kwargs=None, look=None):
-        """Initiate instance of 2d-shape
+    def __init__(self, look=None):
+        """Initialize instance of 2d-shape
 
         Args:
-            args (tuple)    : args for shape building
-            kwargs (dict)   : kwargs for shape building
             look (dict)     : aspect description
                 color (color description)   : inside color
                 outline (color description) : outline color
@@ -48,8 +34,6 @@ class DynamicShape(DynamicComponent):
                 clicked (dict)              : aspect when click on shape
         """
         super().__init__()
-        args = tuple() if args is None else args
-        kwargs = {} if kwargs is None else kwargs
         look = {} if look is None else look
 
         # Read Looks
@@ -69,14 +53,6 @@ class DynamicShape(DynamicComponent):
                 continue
             for key in ['color', 'outline']:
                 look[key] = Color.get(look[key])
-
-        # Build elements to draw
-        self._cache = self.cls.build_cache(*args, **kwargs)
-
-    @property
-    def cache(self):
-        """Return surface of shape"""
-        return self._cache
 
     @abstractmethod
     def display_(self, surface, color, outline, width):

@@ -7,13 +7,8 @@ from .shape import DynamicShape
 class DynamicDisk(DynamicShape):
     """Disk w. potential outline & look change when hovered or clicked"""
 
-    @classmethod
-    def build_cache(cls, center, radius):
-        """Return shape surface and outline of rectangle"""
-        return (np.array(center), int(radius))
-
     def __init__(self, center, radius, **kwargs):
-        """Initiate instance of disk
+        """Initialize instance of disk
 
         Args:
             center (2-int-tuple)    : center of disk
@@ -25,7 +20,8 @@ class DynamicDisk(DynamicShape):
                 hovered (dict)              : aspect when mouse hover rect
                 clicked (dict)              : aspect when user click on rect
         """
-        super().__init__(args=(center, radius), look=kwargs)
+        super().__init__(look=kwargs)
+        self.cache = (np.array(center), int(radius))
 
     def display_(self, surface, color, outline, width):
         """Display disk regarding given aspect"""

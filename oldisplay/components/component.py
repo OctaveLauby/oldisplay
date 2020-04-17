@@ -62,7 +62,7 @@ class DynamicComponent(Component):
     """
 
     def __init__(self):
-        """Initiate instance of component"""
+        """Initialize instance of component"""
         super().__init__()
 
         self._enabled = True
