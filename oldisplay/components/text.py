@@ -2,22 +2,13 @@ import pygame as pg
 from olutils import read_params
 
 from oldisplay.collections import Color
-from .component import ActiveComponent, Component
-
-TOP = "top"
-BOTTOM = "bottom"
-LEFT = "left"
-RIGHT = "right"
-CENTER = "center"
-ADJUSTMENTS = [BOTTOM, CENTER, TOP]
-ALIGNMENTS = [LEFT, CENTER, RIGHT]
+from .component import ActiveComponent, LocatedComponent
 
 
-
-class Text(Component):
+class Text(LocatedComponent):
     """Basic text"""
 
-    dft_look = {
+    dft_look_params = {
         'size': 12,
         'font': None,  # default system font
         'color': "black",
@@ -26,7 +17,7 @@ class Text(Component):
         'underline': False,
     }
 
-    def __init__(self, string, position, align=LEFT, adjust=BOTTOM, **kwargs):
+    def __init__(self, string, position, **kwargs):
         """Initiate params of text to display
 
         About:
@@ -47,18 +38,14 @@ class Text(Component):
                 italic  (bool)          : use italic writing
                 underline (bool)        : underline writing
         """
-        super().__init__()
-
-        # Position
+        loc_params, look_params = read_params(
+            kwargs, [self.cls.dft_loc_params, self.cls.dft_look_params]
+        )
+        super().__init__(position, size=None, **loc_params)
         self._string = string
-        self._position = position
-        self._adjust = None
-        self._align = None
-        self.set_adjust(adjust)
-        self.set_align(align)
 
         # Aspect params
-        self.params = read_params(kwargs, self.cls.dft_look)
+        self.params = read_params(look_params, self.cls.dft_look_params)
 
         # Aspect cache
         self._font = None
@@ -85,6 +72,7 @@ class Text(Component):
 
         # Update
         self._font, self._surf = font, surface
+        self.size = self.surface.get_size()
 
     @property
     def string(self):
@@ -101,39 +89,6 @@ class Text(Component):
         """Surface of text (pygame.Surface)"""
         return self._surf
 
-    def compute_position(self):
-        """Top-Left position of text (2-int-tuple)"""
-        x, y = self._position
-        dx, dy = self.surface.get_size()
-        if self._align == RIGHT:
-            x -= dx
-        elif self._align == CENTER:
-            x -= dx // 2
-
-        if self._adjust == BOTTOM:
-            y -= dy
-        elif self._adjust == CENTER:
-            y += dy //2
-        return x, y
-
-    def set_adjust(self, adjust):
-        """Set kind of adjustment ('bottom', 'center' or 'top')"""
-        if adjust not in ADJUSTMENTS:
-            raise ValueError(
-                f"Unknown value for adjustment {adjust}"
-                f", must be within {ADJUSTMENTS}"
-            )
-        self._adjust = adjust
-
-    def set_align(self, align):
-        """Set kind of alignment ('left', 'center' or 'right')"""
-        if align not in ALIGNMENTS:
-            raise ValueError(
-                f"Unknown value for alignment {align}"
-                f", must be within {ALIGNMENTS}"
-            )
-        self._align = align
-
     def update(self, surface, events=None):
         """Basic display of element
 
@@ -146,8 +101,7 @@ class Text(Component):
 class ActiveText(ActiveComponent):
     """Text with look change when hovered or clicked"""
 
-    def __init__(self, string, position, align=LEFT, adjust=BOTTOM,
-                 hovered=None, clicked=None, **kwargs):
+    def __init__(self, string, position, hovered=None, clicked=None, **kwargs):
         """Initiate params of text to display
 
         About:
@@ -156,9 +110,9 @@ class ActiveText(ActiveComponent):
         Args:
             string (str)            : text displayed
             position (2-int-tuple)  : position of text
-            align (str)             : where position is regarding text (x-axis)
+            h_align (str)           : where position is regarding text (x-axis)
                 left, center or right
-            adjust (str)            : where position is regarding text (y-axis)
+            v_align (str)           : where position is regarding text (y-axis)
                 bottom, center or top
             hovered (dict)          : aspect of text when hovered
             clicked (dict)          : aspect of text when clicked
@@ -171,31 +125,33 @@ class ActiveText(ActiveComponent):
                 underline (bool)        : underline writing
 
         """
+        loc_params, look_params = read_params(
+            kwargs, [Text.dft_loc_params, Text.dft_look_params]
+        )
         super().__init__()
 
         # Aspect params
-        normal = read_params(kwargs, Text.dft_look)
         if hovered is not None:
-            hovered = read_params(hovered, normal)
+            hovered = read_params(hovered, look_params)
         if clicked and hovered:
             clicked = read_params(clicked, hovered)
         elif clicked:
-            clicked = read_params(clicked, normal)
+            clicked = read_params(clicked, look_params)
 
         # Aspect cache
         self._n_txt = Text(
-                string, position, align=align, adjust=adjust, **normal
+                string, position, **loc_params, **look_params
         )
         self._h_txt = (
             None if hovered is None
             else Text(
-                string, position, align=align, adjust=adjust, **hovered
+                string, position, **loc_params, **hovered
             )
         )
         self._c_txt = (
             None if clicked is None
             else Text(
-                string, position, align=align, adjust=adjust, **clicked
+                string, position, **loc_params, **clicked
             )
         )
 

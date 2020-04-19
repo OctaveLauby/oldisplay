@@ -16,7 +16,7 @@ class ActiveShape(ActiveComponent):
             Method to display shape given args=(surface, color, outline, width)
     """
 
-    dft_look = {
+    dft_look_params = {
         'color': "white",
         'outline': "black",
         'width': None,
@@ -38,7 +38,7 @@ class ActiveShape(ActiveComponent):
         # Read Looks
         hovered = kwargs.pop('hovered', None)
         clicked = kwargs.pop('clicked', None)
-        self._look = read_params(kwargs, self.cls.dft_look)
+        self._look = read_params(kwargs, self.cls.dft_look_params)
         self._look_h = (
             None if hovered is None
             else read_params(hovered, self._look)

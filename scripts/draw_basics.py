@@ -34,38 +34,38 @@ if __name__ == "__main__":
             hovered={'color': "orange", 'width': 5},
             clicked={'color': "green"},
         ),
-        components.Text("top-left", (0, 0), adjust="top"),
-        components.Text("top-center", (x_max//2, 0), adjust="top", align="center"),
-        components.Text("top-right", (x_max, 0), adjust="top", align="right"),
-        components.Text("bot-left", (0, y_max), adjust="bottom"),
-        components.Text("bot-center", (x_max//2, y_max), adjust="bottom", align="center"),
-        components.Text("bot-right", (x_max, y_max), adjust="bottom", align="right"),
+        components.Text("top-left", (0, 0), v_align="top"),
+        components.Text("top-center", (x_max//2, 0), v_align="top", h_align="center"),
+        components.Text("top-right", (x_max, 0), v_align="top", h_align="right"),
+        components.Text("bot-left", (0, y_max), v_align="bottom"),
+        components.Text("bot-center", (x_max//2, y_max), v_align="bottom", h_align="center"),
+        components.Text("bot-right", (x_max, y_max), v_align="bottom", h_align="right"),
         components.Text(
-            "arial-20-red", (300, 250), align="center",
+            "arial-20-red", (300, 250), h_align="center",
             font="arial", size=20, color="red"
         ),
         components.Text(
             "candara-20-bold-italic-underline",
-            (300, 300), align="center",
+            (300, 300), h_align="center",
             font="candara", size=20, bold=True, italic=True, underline=True,
         ),
         components.ActiveText(
             "italic_hover-underline",
-            (300, 350), align="center",
+            (300, 350), h_align="center",
             size=20, font="candara", italic=True,
             hovered={'font': "arial", 'underline':True}
 
         ),
         components.ActiveText(
             "italic_click-bold",
-            (300, 400), align="center",
+            (300, 400), h_align="center",
             size=20,  font="candara", italic=True,
             clicked={'font': None, 'bold':True}
 
         ),
         components.ActiveText(
             "italic_hover-underline_click-bold",
-            (300, 450), align="center",
+            (300, 450), h_align="center",
             size=20,  font = "candara", italic = True,
             hovered={'font': "arial", 'underline':True},
             clicked={'font': None, 'bold':True},

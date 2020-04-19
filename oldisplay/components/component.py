@@ -1,5 +1,15 @@
 import pygame as pg
 from abc import ABC, abstractmethod
+from olutils import read_params
+
+LEFT = "left"
+CENTER = "center"
+RIGHT = "right"
+H_ALIGN = [LEFT, CENTER, RIGHT]
+
+TOP = "top"
+BOTTOM = "bottom"
+V_ALIGN = [BOTTOM, CENTER, TOP]
 
 
 class Component(ABC):
@@ -216,3 +226,73 @@ class ActiveComponent(Component):
     def act_release_out(self):
         """Action when user release click out of component after clicking it"""
         pass
+
+
+class LocatedComponent(Component):
+    """Base class for located components with position management"""
+
+    dft_loc_params = {
+        'h_align': LEFT,
+        'v_align': TOP,
+    }
+
+    def __init__(self, position, size, **kwargs):
+        """Initialize a located component
+
+        Args:
+            position (2-int-tuple)  : reference (x, y) position in pixels
+            size (2-int-tuple)      : (dx, dy) size of component in pixels
+                can be None if size determined later on
+            h_align (str)           : how to horizontally align comp. w. pos.
+                default is LEFT
+            v_align (str)           : how to vertically align comp. w. pos.
+                default is TOP
+        """
+        super().__init__()
+        self._rpos = position
+        self._size = size
+
+        kwargs = read_params(kwargs, self.cls.dft_loc_params)
+        if kwargs.h_align not in H_ALIGN:
+            raise ValueError(
+                f"Unknown value for adjustment {kwargs.h_align}"
+                f", must be within {H_ALIGN}"
+            )
+        if kwargs.v_align not in V_ALIGN:
+            raise ValueError(
+                f"Unknown value for adjustment {kwargs.v_align}"
+                f", must be within {V_ALIGN}"
+            )
+        self.h_align = kwargs.h_align
+        self.v_align = kwargs.v_align
+
+    @property
+    def rpos(self):
+        """Reference position"""
+        return self._rpos
+
+    @property
+    def size(self):
+        """Size of component"""
+        return self._size
+
+    @size.setter
+    def size(self, value):
+        """Set size value"""
+        self._size = value
+
+    def compute_position(self):
+        """Compute top-left position on surface`"""
+        x, y = self.rpos
+        dx, dy = self.size
+
+        if self.h_align == RIGHT:
+            x -= dx
+        elif self.h_align == CENTER:
+            x -= dx // 2
+        if self.v_align == BOTTOM:
+            y -= dy
+        elif self.v_align == CENTER:
+            y += dy //2
+
+        return x, y
