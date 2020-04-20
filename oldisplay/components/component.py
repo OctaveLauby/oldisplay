@@ -26,6 +26,15 @@ class Component(ABC):
             additional initiation for once pygame is initialized
     """
 
+    def __init__(self, **kwargs):
+        """Initialize component
+
+        Args:
+            **kwargs        : to handle diamond problem
+        """
+        pass
+
+
     def init(self):
         """Additional initiation to do once pygame is initialized"""
         pass
@@ -87,9 +96,9 @@ class ActiveComponent(Component):
             Method called after click on component and release outside
     """
 
-    def __init__(self):
-        """Initialize instance of component"""
-        super().__init__()
+    def __init__(self, **kwargs):
+        """Initialize instance of active component"""
+        super().__init__(**kwargs)
 
         self._enabled = True
         self._visible = True
@@ -240,19 +249,19 @@ class LocatedComponent(Component):
         """Initialize a located component
 
         Args:
-            position (2-int-tuple)  : reference (x, y) position in pixels
+            position (2-int-tuple)  : reference (x, y) position
             size (2-int-tuple)      : (dx, dy) size of component in pixels
                 can be None if size determined later on
             h_align (str)           : how to horizontally align comp. w. pos.
-                default is LEFT
+                'left', 'center' or 'right' (default is 'left')
             v_align (str)           : how to vertically align comp. w. pos.
-                default is TOP
+                'bot', 'center' or 'top' (default is 'top')
         """
-        super().__init__()
+        super().__init__(**kwargs)
         self._rpos = position
         self._size = size
 
-        kwargs = read_params(kwargs, self.cls.dft_loc_params)
+        kwargs = read_params(kwargs, self.cls.dft_loc_params, safe=False)
         if kwargs.h_align not in H_ALIGN:
             raise ValueError(
                 f"Unknown value for adjustment {kwargs.h_align}"

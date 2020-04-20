@@ -1,26 +1,25 @@
 import pygame as pg
+from olutils import read_params
 
-from .shape import ActiveShape
+from .component import LocatedComponent
+from .shape import ActiveLocatedShape
 
 
-class ActiveRectangle(ActiveShape):
+class ActiveRectangle(ActiveLocatedShape):
     """Rectangle w. potential outline & look change when hovered or clicked"""
 
     def __init__(self, position, size, **kwargs):
         """Initialize instance of rectangle
 
         Args:
-            position (2-int-tuple)  : position of top-right on surface
+            position (2-int-tuple)  : reference position
             size (2-int-tuple)      : size of rectangle
             **kwargs                : aspect description
-                color (color desc)      : inside color
-                outline (color desc)    : outline color
-                width (int)             : width of border
-                hovered (dict)          : aspect when mouse hover rect
-                clicked (dict)          : aspect when user click on rect
+                @see ActiveShape
+                @see LocatedComponent
         """
-        super().__init__(**kwargs)
-        self.cache = pg.Rect(position, size)
+        super().__init__(position, size, **kwargs)
+        self.cache = pg.Rect(self.compute_position(), size)
 
     def display_(self, surface, color, outline, width):
         """Display rectangle regarding given aspect"""

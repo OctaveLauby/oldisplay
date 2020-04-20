@@ -1,8 +1,9 @@
 from abc import abstractmethod
-from olutils import read_params
+from olutils import Param, read_params
 
 from oldisplay.collections import Color
-from .component import Component, ActiveComponent
+from oldisplay.utils import read_look
+from .component import Component, ActiveComponent, LocatedComponent
 
 
 class ActiveShape(ActiveComponent):
@@ -25,33 +26,25 @@ class ActiveShape(ActiveComponent):
     def __init__(self, **kwargs):
         """Initialize instance of 2d-shape
 
+        About:
+            For a given parameter, one can give 1-to-3 values within a tuple
+            or a list to precise normal, hovered and/or clicked look
+
         Args:
-            **kwargs    : aspect of shape
-                color (color description)   : inside color
-                outline (color description) : outline color
-                width (int)                 : width of outline
-                hovered (dict)              : aspect when mouse over shape
-                clicked (dict)              : aspect when click on shape
+            color (color|tuple)     : inside color
+            outline (color|tuple)   : outline color
+            width (int|tuple)       : width of outline
         """
-        super().__init__()
+        super().__init__(**kwargs)
 
         # Read Looks
-        hovered = kwargs.pop('hovered', None)
-        clicked = kwargs.pop('clicked', None)
-        self._look = read_params(kwargs, self.cls.dft_look_params)
-        self._look_h = (
-            None if hovered is None
-            else read_params(hovered, self._look)
-        )
-        self._look_c = (
-            None if clicked is None
-            else read_params(clicked, self._look_h or self._look)
-        )
-        for look in [self._look, self._look_h, self._look_c]:
+        looks = read_look(kwargs, self.cls.dft_look_params, safe=False)
+        for look in looks:
             if look is None:
                 continue
             for key in ['color', 'outline']:
                 look[key] = Color.get(look[key])
+        self._look, self._look_h, self._look_c = looks
 
     @abstractmethod
     def display_(self, surface, color, outline, width):
@@ -74,6 +67,21 @@ class ActiveShape(ActiveComponent):
         return self.display_(surface, **self._look_c)
 
 
+class ActiveLocatedShape(LocatedComponent, ActiveShape):
+
+    def __init__(self, position, size, **kwargs):
+        """Initialize instance of rectangle
+
+        Args:
+            position (2-int-tuple)  : reference position in pixels
+            size (2-int-tuple)      : size of shape in pixels
+            **kwargs                : location and look parameters
+                @see LocatedComponent
+                @see ActiveShape
+        """
+        super().__init__(position=position, size=size, **kwargs)
+
+
 class LinearShape(Component):
     """Base class for linear shapes
 
@@ -92,11 +100,11 @@ class LinearShape(Component):
         """Initiate a linear shape
 
         Args:
-            **params    : aspect of shape
-                color (color descr) : color of lines
-                width (int)         : width of lines
+            **kwargs    : aspect of shape
+                color (color)   : color of lines
+                width (int)     : width of lines
         """
-        super().__init__()
+        super().__init__(**kwargs)
         look = read_params(kwargs, self.cls.dft_look)
         self.color = Color.get(look.color)
         self.width = look.width

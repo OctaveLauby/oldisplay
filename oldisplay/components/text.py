@@ -2,6 +2,7 @@ import pygame as pg
 from olutils import read_params
 
 from oldisplay.collections import Color
+from oldisplay.utils import read_look
 from .component import ActiveComponent, LocatedComponent
 
 
@@ -26,11 +27,15 @@ class Text(LocatedComponent):
         Args:
             string (str)            : text displayed
             position (2-int-tuple)  : position of text
-            align (str)             : where position is regarding text (x-axis)
-                left, center or right
-            adjust (str)            : where position is regarding text (y-axis)
-                bottom, center or top
-            **kwargs                : aspect of text
+            **kwargs                : location and aspect parameters
+
+                # Location parameters
+                h_align (str)           : where position is regarding text (x-axis)
+                    left, center or right
+                v_align (str)           : where position is regarding text (y-axis)
+                    bottom, center or top
+
+                # Aspect parameters
                 size (int)              : size of font
                 font (str)              : name of font
                 color (color descr)     : color of display
@@ -38,16 +43,11 @@ class Text(LocatedComponent):
                 italic  (bool)          : use italic writing
                 underline (bool)        : underline writing
         """
-        loc_params, look_params = read_params(
-            kwargs, [self.cls.dft_loc_params, self.cls.dft_look_params]
-        )
-        super().__init__(position, size=None, **loc_params)
+        self.params = read_params(kwargs, self.cls.dft_look_params, safe=False)
+        kwargs.pop('size', None)
+        super().__init__(position=position, size=None, **kwargs)
+
         self._string = string
-
-        # Aspect params
-        self.params = read_params(look_params, self.cls.dft_look_params)
-
-        # Aspect cache
         self._font = None
         self._surf = None
 
@@ -101,7 +101,7 @@ class Text(LocatedComponent):
 class ActiveText(ActiveComponent):
     """Text with look change when hovered or clicked"""
 
-    def __init__(self, string, position, hovered=None, clicked=None, **kwargs):
+    def __init__(self, string, position, **kwargs):
         """Initiate params of text to display
 
         About:
@@ -110,37 +110,35 @@ class ActiveText(ActiveComponent):
         Args:
             string (str)            : text displayed
             position (2-int-tuple)  : position of text
-            h_align (str)           : where position is regarding text (x-axis)
-                left, center or right
-            v_align (str)           : where position is regarding text (y-axis)
-                bottom, center or top
-            hovered (dict)          : aspect of text when hovered
-            clicked (dict)          : aspect of text when clicked
-            **kwargs                : aspect of text
+            **kwargs                : location and look parameters
+
+                # Location parameters
+                h_align (str)           : where position is regarding text (x-axis)
+                    left, center or right
+                v_align (str)           : where position is regarding text (y-axis)
+                    bottom, center or top
+
+                # Look parameters
                 size (int)              : size of font
                 font (str)              : name of font
                 color (color descr)     : color of display
                 bold (bool)             : use bold writing
                 italic  (bool)          : use italic writing
                 underline (bool)        : underline writing
-
         """
-        loc_params, look_params = read_params(
-            kwargs, [Text.dft_loc_params, Text.dft_look_params]
-        )
-        super().__init__()
+        super().__init__(**kwargs)
 
         # Aspect params
-        if hovered is not None:
-            hovered = read_params(hovered, look_params)
-        if clicked and hovered:
-            clicked = read_params(clicked, hovered)
-        elif clicked:
-            clicked = read_params(clicked, look_params)
+        loc_params = read_params(
+            kwargs, LocatedComponent.dft_loc_params, safe=False
+        )
+        normal, hovered, clicked = read_look(
+            kwargs, Text.dft_look_params, safe=False
+        )
 
         # Aspect cache
         self._n_txt = Text(
-                string, position, **loc_params, **look_params
+                string, position, **loc_params, **normal
         )
         self._h_txt = (
             None if hovered is None
