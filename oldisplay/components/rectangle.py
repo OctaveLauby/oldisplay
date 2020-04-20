@@ -1,7 +1,5 @@
 import pygame as pg
-from olutils import read_params
 
-from .component import LocatedComponent
 from .shape import ActiveLocatedShape
 
 

@@ -1,7 +1,6 @@
 if __name__ == "__main__":
-    from oldisplay import components, Window, _default
+    from oldisplay import components, Window, DFT
     from oldisplay.collections import COLORS
-    import oldisplay.components as components
 
     x_max, y_max = 700, 700
 
@@ -27,11 +26,11 @@ if __name__ == "__main__":
         ),
         components.ActiveRectangle(
             (200, 0), (100, 100),
-            color=('red', 'orange', 'green'), width=(_default, 5),
+            color=('red', 'orange', 'green'), width=(DFT, 5),
         ),
         components.ActiveDisk(
             center=(350, 50), radius=50,
-            color=('red', 'orange', 'green'), width=(_default, 5), outline=(_default, _default, 'purple')
+            color=('red', 'orange', 'green'), width=(DFT, 5), outline=(DFT, DFT, 'purple')
         ),
 
         # Surrounding Text
@@ -81,7 +80,7 @@ if __name__ == "__main__":
         components.ActiveText(
             "italic_click-bold", (300, 400), h_align="center",
             size=20,
-            font=("candara", _default, None),
+            font=("candara", DFT, None),
             italic=True,
             bold=(False, False, True),
 
@@ -90,7 +89,7 @@ if __name__ == "__main__":
             "italic_hover-underline_click-bold", (300, 450), h_align="center",
             size=20,
             font = ("candara", "arial"),
-            underline=(_default, True),
+            underline=(DFT, True),
             bold=(False, False, True),
             italic = True,
         ),

@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from olutils import Param, read_params
+from olutils import read_params
 
 from oldisplay.collections import Color
 from oldisplay.utils import read_look
