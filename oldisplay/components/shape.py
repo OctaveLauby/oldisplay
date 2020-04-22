@@ -69,17 +69,17 @@ class ActiveShape(ActiveComponent):
 
 class ActiveLocatedShape(LocatedComponent, ActiveShape):
 
-    def __init__(self, position, size, **kwargs):
+    def __init__(self, ref_pos, size, **kwargs):
         """Initialize instance of rectangle
 
         Args:
-            position (2-int-tuple)  : reference position in pixels
+            ref_pos (2-int-tuple)   : reference position in pixels
             size (2-int-tuple)      : size of shape in pixels
             **kwargs                : location and look parameters
                 @see LocatedComponent
                 @see ActiveShape
         """
-        super().__init__(position=position, size=size, **kwargs)
+        super().__init__(ref_pos=ref_pos, size=size, **kwargs)
 
 
 class LinearShape(Component):

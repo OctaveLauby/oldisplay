@@ -18,7 +18,7 @@ class Text(LocatedComponent):
         'underline': False,
     }
 
-    def __init__(self, string, position, **kwargs):
+    def __init__(self, string, ref_pos, **kwargs):
         """Initiate params of text to display
 
         About:
@@ -26,7 +26,7 @@ class Text(LocatedComponent):
 
         Args:
             string (str)            : text displayed
-            position (2-int-tuple)  : position of text
+            ref_pos (2-int-tuple)   : position of text
             **kwargs                : location and aspect parameters
 
                 # Location parameters
@@ -45,7 +45,7 @@ class Text(LocatedComponent):
         """
         self.params = read_params(kwargs, self.cls.dft_look_params, safe=False)
         kwargs.pop('size', None)
-        super().__init__(position=position, size=None, **kwargs)
+        super().__init__(ref_pos=ref_pos, size=None, **kwargs)
 
         self._string = string
         self._font = None
@@ -95,13 +95,13 @@ class Text(LocatedComponent):
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        surface.blit(self.surface, self.compute_position())
+        surface.blit(self.surface, self.position)
 
 
 class ActiveText(ActiveComponent):
     """Text with look change when hovered or clicked"""
 
-    def __init__(self, string, position, **kwargs):
+    def __init__(self, string, ref_pos, **kwargs):
         """Initiate params of text to display
 
         About:
@@ -109,7 +109,7 @@ class ActiveText(ActiveComponent):
 
         Args:
             string (str)            : text displayed
-            position (2-int-tuple)  : position of text
+            ref_pos (2-int-tuple)   : position of text
             **kwargs                : location and look parameters
 
                 # Location parameters
@@ -138,18 +138,18 @@ class ActiveText(ActiveComponent):
 
         # Aspect cache
         self._n_txt = Text(
-                string, position, **loc_params, **normal
+                string, ref_pos, **loc_params, **normal
         )
         self._h_txt = (
             None if hovered is None
             else Text(
-                string, position, **loc_params, **hovered
+                string, ref_pos, **loc_params, **hovered
             )
         )
         self._c_txt = (
             None if clicked is None
             else Text(
-                string, position, **loc_params, **clicked
+                string, ref_pos, **loc_params, **clicked
             )
         )
 
@@ -208,6 +208,6 @@ class ActiveText(ActiveComponent):
     def is_within(self, position):
         """Return whether position is within hit box"""
         x, y = position
-        sx, sy = self.normal_txt.compute_position()
+        sx, sy = self.normal_txt.compute_top_left()
         dx, dy = self.normal_txt.surface.get_size()
         return (sx < x < sx+dx) and (sy < y < sy+dy)

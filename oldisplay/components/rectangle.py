@@ -7,18 +7,19 @@ from .shape import ActiveLocatedShape
 class ActiveRectangle(ActiveLocatedShape):
     """Rectangle w. potential outline & look change when hovered or clicked"""
 
-    def __init__(self, position, size, **kwargs):
+    def __init__(self, ref_pos, size, **kwargs):
         """Initialize instance of rectangle
 
         Args:
-            position (2-int-tuple)  : reference position
+            ref_pos (2-int-tuple)   : reference position
+                default is top-left
             size (2-int-tuple)      : size of rectangle
             **kwargs                : aspect & position description
                 @see ActiveShape
                 @see LocatedComponent
         """
-        super().__init__(position, size, **kwargs)
-        self.cache = pg.Rect(self.compute_position(), size)
+        super().__init__(ref_pos, size, **kwargs)
+        self.cache = pg.Rect(self.position, size)
 
     def display_(self, surface, color, outline, width):
         """Display rectangle regarding given aspect"""
@@ -27,7 +28,7 @@ class ActiveRectangle(ActiveLocatedShape):
         if outline and width:
             # Build my own outline as pg.draw.rect draw awkward outline
             # # (that goes outside rectangle and ignore corners)
-            x, y = self.compute_position()
+            x, y = self.position
             dx, dy = self.cache.size
             width = min([width, dx, dy])
             delta_p = (width-1) // 2

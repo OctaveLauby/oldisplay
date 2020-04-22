@@ -245,22 +245,23 @@ class LocatedComponent(Component):
         'v_align': TOP,
     }
 
-    def __init__(self, position, size, **kwargs):
+    def __init__(self, ref_pos, size, **kwargs):
         """Initialize a located component
 
         Args:
-            position (2-int-tuple)  : reference (x, y) position
+            ref_pos (2-int-tuple)   : reference (x, y) position
             size (2-int-tuple)      : (dx, dy) size of component in pixels
                 can be None if size determined later on
-            h_align (str)           : how to horizontally align comp. w. pos.
+            h_align (str)           : horizontal alignment with ref_pos
                 'left', 'center' or 'right'
-            v_align (str)           : how to vertically align comp. w. pos.
+            v_align (str)           : vertical alignment with ref_pos
                 'bot', 'center' or 'top'
         """
         super().__init__(**kwargs)
-        self._rpos = position
+        self._ref_pos = ref_pos
         self._size = size
-        self._pos_dict = {}  # TODO: limit size of position cache
+        self._pos = None
+        self._pos_func = self.compute_top_left
 
         kwargs = read_params(kwargs, self.cls.dft_loc_params, safe=False)
         if kwargs.h_align not in H_ALIGN:
@@ -277,9 +278,16 @@ class LocatedComponent(Component):
         self.v_align = kwargs.v_align
 
     @property
-    def rpos(self):
+    def position(self):
+        """Utility position"""
+        if self._pos is None:
+            self._pos = self._pos_func()
+        return self._pos
+
+    @property
+    def ref_pos(self):
         """Reference position"""
-        return self._rpos
+        return self._ref_pos
 
     @property
     def size(self):
@@ -291,17 +299,10 @@ class LocatedComponent(Component):
         """Set size value"""
         self._size = value
 
-    def compute_position(self):
+    def compute_top_left(self):
         """Compute top-left position on surface"""
-        x, y = self.rpos
+        x, y = self.ref_pos
         dx, dy = self.size
-        key = (x, y, dx, dy)
-
-        try:
-            return self._pos_dict[key]
-        except KeyError:
-            pass
-
         if self.h_align == RIGHT:
             x -= dx
         elif self.h_align == CENTER:
@@ -310,6 +311,4 @@ class LocatedComponent(Component):
             y -= dy
         elif self.v_align == CENTER:
             y -= dy //2
-
-        self._pos_dict[key] = x, y
         return x, y
