@@ -13,7 +13,7 @@ class ActiveRectangle(ActiveLocatedShape):
         Args:
             position (2-int-tuple)  : reference position
             size (2-int-tuple)      : size of rectangle
-            **kwargs                : aspect description
+            **kwargs                : aspect & position description
                 @see ActiveShape
                 @see LocatedComponent
         """
@@ -31,7 +31,7 @@ class ActiveRectangle(ActiveLocatedShape):
             dx, dy = self.cache.size
             width = min([width, dx, dy])
             delta_p = (width-1) // 2
-            delta_m = (width-1) // 2 + (width+1) % 2
+            delta_m = (width-1) // 2 + ((width+1) % 2)
             x_lft, x_rgt = x+delta_p, x+dx-delta_m
             y_top, y_bot = y+delta_p, y+dy-delta_m
             line = LineSet([

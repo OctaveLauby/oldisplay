@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
         # Background
         components.Grid(
-            dx=50, dy=50, color="gray", width=1,
+            dx=50, dy=50, color="red", width=1,
         ),
 
         # Shapes
@@ -29,11 +29,11 @@ if __name__ == "__main__":
             color=('red', 'orange', 'green'), width=(DFT, 3),
         ),
         components.ActiveDisk(
-            center=(325, 25), radius=25,
+            position=(325, 25), radius=25,
             color=('red', 'orange', 'green'), width=(DFT, 3), outline=(DFT, DFT, 'purple')
         ),
         components.ActiveDisk(
-            center=(425, 25), radius=25,
+            position=(425, 25), radius=25,
             color='cyan', width=10, outline='purple',
         ),
         components.ActiveRectangle(  # Outline width equal size/2
@@ -48,15 +48,15 @@ if __name__ == "__main__":
         # Placed shapes
         components.ActiveRectangle(
             (0, 150), (50, 50), v_align='bottom',
-            color='cyan'
+            color='black'
         ),
         components.ActiveRectangle(
             (100, 150), (50, 50), h_align='right',
-            color='cyan'
+            color='black'
         ),
         components.ActiveRectangle(
             (200, 150), (50, 50), v_align='center', h_align='center',
-            color='cyan'
+            color='black'
         ),
 
         # Surrounding Text

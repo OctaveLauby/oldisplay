@@ -253,9 +253,9 @@ class LocatedComponent(Component):
             size (2-int-tuple)      : (dx, dy) size of component in pixels
                 can be None if size determined later on
             h_align (str)           : how to horizontally align comp. w. pos.
-                'left', 'center' or 'right' (default is 'left')
+                'left', 'center' or 'right'
             v_align (str)           : how to vertically align comp. w. pos.
-                'bot', 'center' or 'top' (default is 'top')
+                'bot', 'center' or 'top'
         """
         super().__init__(**kwargs)
         self._rpos = position
