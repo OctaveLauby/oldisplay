@@ -24,8 +24,8 @@ def _read_align_param(align):
 
     Args:
         align (str): alignment description
-            '{v_align}-{h_align}'
-            '{mid_align}'
+            '{v_align}-{h_align}' where v_align/h_align in V_ALIGN/H_ALIGN
+            '{mid_align}' where mid_align in MID_ALIGN
 
     Return:
         (dict): {'h_align': (str), 'v_align': (str)}
@@ -56,7 +56,24 @@ def _read_align_param(align):
 
 
 def read_align_params(kwargs, dft_kwargs, safe=False):
-    """Read alignments parameters"""
+    """Read alignments parameters
+
+    Args:
+        kwargs (dict)       : parameters for alignment
+            'h_align': (str)    -> horizontal alignment (within H_ALIGN)
+            'v_align': (str)    -> vertical alignment (within V_ALIGN)
+            'align': (str)      -> alignment ("{h_align}-{v_align}")
+                overwrite other params
+        dft_kwargs (dict)   : default parameters for alignment
+            'h_align': (str)    -> horizontal alignment (within H_ALIGN)
+            'v_align': (str)    -> vertical alignment (within V_ALIGN)
+        safe (bool)         : raise Error if kwargs has unexpected params
+
+    Return:
+        (olutils.Param): dictionary with alignment params
+            'h_align': (str)    -> horizontal alignment (within H_ALIGN)
+            'v_align': (str)    -> vertical alignment (within V_ALIGN)
+    """
     assert sorted(dft_kwargs.keys()) == ['h_align', 'v_align']
     if 'align' in kwargs:
         kwargs = _read_align_param(kwargs['align'])
