@@ -7,18 +7,32 @@ from .shape import LinearShape
 # Functions
 
 def draw_segment(surface, p1, p2, color, width):
-    """Draw segment on surface"""
+    """Draw segment on surface
+
+    About:
+        Line width extend centered on base line, when width is even the extra
+        pixel goes on the right/bottom of the line (x/y positively)
+    """
     pg.draw.line(surface, color, p1, p2, width)
 
 
-def draw_line(surface, points, color, width):
-    """Draw line on surface"""
-    for p1, p2 in zip(points[:-1], points[1:]):
-        draw_segment(surface, p1, p2, color, width)
+def draw_line(surface, points, color, width, closed=False):
+    """Draw line on surface
+
+    About:
+        Line width extend centered on base line, when width is even the extra
+        pixel goes on the right/bottom of the line (x/y positively)
+    """
+    pg.draw.lines(surface, color, closed, points, width)
 
 
 def draw_lines(surface, lines, color, width):
-    """Draw a set of lines on surface"""
+    """Draw a set of lines on surface
+
+    About:
+        Line width extend centered on base line, when width is even the extra
+        pixel goes on the right/bottom of the line (x/y positively)
+    """
     for points in lines:
         draw_line(surface, points, color, width)
 
@@ -29,7 +43,15 @@ def draw_lines(surface, lines, color, width):
 class Segment(LinearShape):
 
     def __init__(self, p1, p2, **kwargs):
-        """Initialize a segment"""
+        """Initialize a segment
+
+        Args:
+            p1 (2-int-tuple)    : starting position
+            p2 (2-int-tuple)    : ending position
+            **kwargs    : aspect of shape
+                color (color)   : color of lines
+                width (int)     : width of lines
+        """
         super().__init__(**kwargs)
         self.p1 = p1
         self.p2 = p2
@@ -42,7 +64,14 @@ class Segment(LinearShape):
 class Line(LinearShape):
 
     def __init__(self, points, **kwargs):
-        """Initialize a line"""
+        """Initialize a line
+
+        Args:
+            line (list) : list of points
+            **kwargs    : aspect of shape
+                color (color)   : color of lines
+                width (int)     : width of lines
+        """
         super().__init__(**kwargs)
         self.points = points
 
@@ -54,7 +83,14 @@ class Line(LinearShape):
 class LineSet(LinearShape):
 
     def __init__(self, lines, **kwargs):
-        """Initialize a set of line"""
+        """Initialize a set of line
+
+        Args:
+            lines (list): list of lines (1 line is list[2-int-tuple])
+            **kwargs    : aspect of shape
+                color (color)   : color of lines
+                width (int)     : width of lines
+        """
         super().__init__(**kwargs)
         self.lines = lines
 
