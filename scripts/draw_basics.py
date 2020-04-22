@@ -17,20 +17,38 @@ if __name__ == "__main__":
 
         # Shapes
         components.ActiveRectangle(
-            position=(0, 0), size=(100, 100),
+            position=(0, 0), size=(50, 50),
             color='blue'
         ),
         components.ActiveRectangle(
-            (100, 0), (100, 100),
-            color=('green', 'blue'), outline='purple', width=5,
+            (100, 0), (50, 50),
+            color=('green', 'blue'), outline='purple', width=10,
         ),
         components.ActiveRectangle(
-            (200, 0), (100, 100),
-            color=('red', 'orange', 'green'), width=(DFT, 5),
+            (200, 0), (50, 50),
+            color=('red', 'orange', 'green'), width=(DFT, 3),
         ),
         components.ActiveDisk(
-            center=(350, 50), radius=50,
-            color=('red', 'orange', 'green'), width=(DFT, 5), outline=(DFT, DFT, 'purple')
+            center=(325, 25), radius=25,
+            color=('red', 'orange', 'green'), width=(DFT, 3), outline=(DFT, DFT, 'purple')
+        ),
+        components.ActiveDisk(
+            center=(425, 25), radius=25,
+            color='cyan', width=10, outline='purple',
+        ),
+
+        # Placed shapes
+        components.ActiveRectangle(
+            (0, 150), (50, 50), v_align='bottom',
+            color='cyan'
+        ),
+        components.ActiveRectangle(
+            (100, 150), (50, 50), h_align='right',
+            color='cyan'
+        ),
+        components.ActiveRectangle(
+            (200, 150), (50, 50), v_align='center', h_align='center',
+            color='cyan'
         ),
 
         # Surrounding Text

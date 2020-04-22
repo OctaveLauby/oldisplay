@@ -302,6 +302,6 @@ class LocatedComponent(Component):
         if self.v_align == BOTTOM:
             y -= dy
         elif self.v_align == CENTER:
-            y += dy //2
+            y -= dy //2
 
         return x, y
