@@ -62,27 +62,27 @@ if __name__ == "__main__":
         # Surrounding Text
         components.Text(
             "top-left", (0, 0),
-            v_align="top",
+            align="top-left",
         ),
         components.Text(
             "top-center", (x_max//2, 0),
-            v_align="top", h_align="center"
+            align="top-mid"
         ),
         components.Text(
             "top-right", (x_max, 0),
-            v_align="top", h_align="right"
+            align="top-right"
         ),
         components.Text(
             "bot-left", (0, y_max),
-            v_align="bottom"
+            align="bot-lft"
         ),
         components.Text(
             "bot-center", (x_max//2, y_max),
-            v_align="bottom", h_align="center"
+            align="bottom-center"
         ),
         components.Text(
             "bot-right", (x_max, y_max),
-            v_align="bottom", h_align="right"
+            align="bot-rgt"
         ),
 
         # Middle text

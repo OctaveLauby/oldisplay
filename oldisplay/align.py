@@ -19,18 +19,56 @@ H_ALIGN = [*LFT_ALIGN, *MID_ALIGN, *RGT_ALIGN]
 V_ALIGN = [*TOP_ALIGN, *MID_ALIGN, *BOT_ALIGN]
 
 
+def _read_align_param(align):
+    """Convert string to (h_align, v_align)
+
+    Args:
+        align (str): alignment description
+            '{v_align}-{h_align}'
+            '{mid_align}'
+
+    Return:
+        (dict): {'h_align': (str), 'v_align': (str)}
+    """
+    items = align.replace("_", "-").replace(" ", "-").split("-")
+    if len(items) == 1:
+        if items[0] in MID_ALIGN:
+            return CENTER, CENTER
+        raise ValueError(
+            f"align param must be within {MID_ALIGN}, got '{align}'"
+        )
+    if len(items) == 2:
+        if items[0] not in V_ALIGN:
+            raise ValueError(
+                f"Fist item of align param must be within {V_ALIGN}"
+                f", got '{items[0]}'"
+            )
+        if items[1] not in H_ALIGN:
+            raise ValueError(
+                f"Second item of align param must be within {H_ALIGN}"
+                f", got '{items[1]}'"
+            )
+        return {'h_align': items[1], 'v_align': items[0]}
+    raise ValueError(
+        f"align param must have 2 items separated with '-' char"
+        f", got align"
+    )
+
+
 def read_align_params(kwargs, dft_kwargs, safe=False):
     """Read alignments parameters"""
     assert sorted(dft_kwargs.keys()) == ['h_align', 'v_align']
+    if 'align' in kwargs:
+        kwargs = _read_align_param(kwargs['align'])
     kwargs = read_params(kwargs, dft_kwargs, safe=safe)
     if kwargs.h_align not in H_ALIGN:
         raise ValueError(
-            f"Unknown value for adjustment {kwargs.h_align}"
+            f"Unknown value for adjustment '{kwargs.h_align}'"
             f", must be within {H_ALIGN}"
         )
     if kwargs.v_align not in V_ALIGN:
         raise ValueError(
-            f"Unknown value for adjustment {kwargs.v_align}"
+            f"Unknown value for adjustment '{kwargs.v_align}'"
             f", must be within {V_ALIGN}"
         )
     return kwargs

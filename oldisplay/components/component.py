@@ -246,10 +246,8 @@ class LocatedComponent(Component):
             ref_pos (2-int-tuple)   : reference (x, y) position
             size (2-int-tuple)      : (dx, dy) size of component in pixels
                 can be None if size determined later on
-            h_align (str)           : horizontal alignment with ref_pos
-                'left', 'center' or 'right'
-            v_align (str)           : vertical alignment with ref_pos
-                'bot', 'center' or 'top'
+            align (str)             : alignment with ref_pos
+                'center', 'top-left', 'bot-right', 'top-center', ...
         """
         super().__init__(**kwargs)
         self._pos = None
