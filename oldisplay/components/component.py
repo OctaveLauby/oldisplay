@@ -260,6 +260,7 @@ class LocatedComponent(Component):
         super().__init__(**kwargs)
         self._rpos = position
         self._size = size
+        self._pos_dict = {}  # TODO: limit size of position cache
 
         kwargs = read_params(kwargs, self.cls.dft_loc_params, safe=False)
         if kwargs.h_align not in H_ALIGN:
@@ -291,9 +292,15 @@ class LocatedComponent(Component):
         self._size = value
 
     def compute_position(self):
-        """Compute top-left position on surface`"""
+        """Compute top-left position on surface"""
         x, y = self.rpos
         dx, dy = self.size
+        key = (x, y, dx, dy)
+
+        try:
+            return self._pos_dict[key]
+        except KeyError:
+            pass
 
         if self.h_align == RIGHT:
             x -= dx
@@ -304,4 +311,5 @@ class LocatedComponent(Component):
         elif self.v_align == CENTER:
             y -= dy //2
 
+        self._pos_dict[key] = x, y
         return x, y
