@@ -36,6 +36,14 @@ if __name__ == "__main__":
             center=(425, 25), radius=25,
             color='cyan', width=10, outline='purple',
         ),
+        components.ActiveRectangle(  # Outline width equal size/2
+            position=(500, 0), size=(50, 50),
+            color='red', outline='cyan', width=25,
+        ),
+        components.ActiveRectangle(  # Outline width greater than size/2
+            position=(600, 0), size=(50, 50),
+            color='red', outline='cyan', width=100,
+        ),
 
         # Placed shapes
         components.ActiveRectangle(
