@@ -208,6 +208,6 @@ class ActiveText(ActiveComponent):
     def is_within(self, position):
         """Return whether position is within hit box"""
         x, y = position
-        sx, sy = self.normal_txt.compute_top_left()
+        sx, sy = self.normal_txt.position
         dx, dy = self.normal_txt.surface.get_size()
         return (sx < x < sx+dx) and (sy < y < sy+dy)

@@ -47,15 +47,15 @@ if __name__ == "__main__":
 
         # Placed shapes
         components.ActiveRectangle(
-            (0, 150), (50, 50), v_align='bottom',
+            (0, 150), (50, 50), v_align='bot',
             color='black'
         ),
         components.ActiveRectangle(
-            (100, 150), (50, 50), h_align='right',
+            (100, 150), (50, 50), h_align='rgt',
             color='black'
         ),
         components.ActiveRectangle(
-            (200, 150), (50, 50), v_align='center', h_align='center',
+            (200, 150), (50, 50), v_align='mid', h_align='mid',
             color='black'
         ),
 

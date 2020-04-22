@@ -2,14 +2,7 @@ import pygame as pg
 from abc import ABC, abstractmethod
 from olutils import read_params
 
-LEFT = "left"
-CENTER = "center"
-RIGHT = "right"
-H_ALIGN = [LEFT, CENTER, RIGHT]
-
-TOP = "top"
-BOTTOM = "bottom"
-V_ALIGN = [BOTTOM, CENTER, TOP]
+from oldisplay import align
 
 
 class Component(ABC):
@@ -241,9 +234,10 @@ class LocatedComponent(Component):
     """Base class for located components with position management"""
 
     dft_loc_params = {
-        'h_align': LEFT,
-        'v_align': TOP,
+        'h_align': align.LEFT,
+        'v_align': align.TOP,
     }
+    position_func = align.compute_top_left
 
     def __init__(self, ref_pos, size, **kwargs):
         """Initialize a located component
@@ -258,22 +252,13 @@ class LocatedComponent(Component):
                 'bot', 'center' or 'top'
         """
         super().__init__(**kwargs)
-        self._ref_pos = ref_pos
-        self._size = size
         self._pos = None
-        self._pos_func = self.compute_top_left
+        self.ref_pos = ref_pos
+        self.size = size
 
-        kwargs = read_params(kwargs, self.cls.dft_loc_params, safe=False)
-        if kwargs.h_align not in H_ALIGN:
-            raise ValueError(
-                f"Unknown value for adjustment {kwargs.h_align}"
-                f", must be within {H_ALIGN}"
-            )
-        if kwargs.v_align not in V_ALIGN:
-            raise ValueError(
-                f"Unknown value for adjustment {kwargs.v_align}"
-                f", must be within {V_ALIGN}"
-            )
+        kwargs = align.read_align_params(
+            kwargs, self.cls.dft_loc_params, safe=False
+        )
         self.h_align = kwargs.h_align
         self.v_align = kwargs.v_align
 
@@ -281,13 +266,21 @@ class LocatedComponent(Component):
     def position(self):
         """Utility position"""
         if self._pos is None:
-            self._pos = self._pos_func()
+            self._pos = self.cls.position_func(
+                self.ref_pos, self.size, self.h_align, self.v_align
+            )
         return self._pos
 
     @property
     def ref_pos(self):
         """Reference position"""
         return self._ref_pos
+
+    @ref_pos.setter
+    def ref_pos(self, value):
+        """Reference position"""
+        self._ref_pos = value
+        self._pos = None
 
     @property
     def size(self):
@@ -298,17 +291,4 @@ class LocatedComponent(Component):
     def size(self, value):
         """Set size value"""
         self._size = value
-
-    def compute_top_left(self):
-        """Compute top-left position on surface"""
-        x, y = self.ref_pos
-        dx, dy = self.size
-        if self.h_align == RIGHT:
-            x -= dx
-        elif self.h_align == CENTER:
-            x -= dx // 2
-        if self.v_align == BOTTOM:
-            y -= dy
-        elif self.v_align == CENTER:
-            y -= dy //2
-        return x, y
+        self._pos = None
