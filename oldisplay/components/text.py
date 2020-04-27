@@ -5,12 +5,50 @@ from oldisplay.collections import Color
 from oldisplay.utils import read_look
 from .component import ActiveComponent, LocatedComponent
 
+_font_cache = {
+    # fontname: (height factor, height offset)
+}
+
+def font_sizing(fontname):
+    """Return factor and offset to compute text size in pixels from front size
+
+    About:
+        When loading a font one must precise a size that does not match the
+        actual height in pixels the text will have. The difference depends on
+        the font.
+
+    Return:
+        (2-float-tuple): factor and offset of the given font so that
+            height (in pixels) = factor * size (of font) + offset
+    """
+    try:
+        return _font_cache[fontname]
+    except KeyError:
+        pass
+
+    s1, s2 = 100, 200  # I tried a few and those give the best precision
+    args = ("Text", True, (0, 0, 0))
+    h1 = pg.font.SysFont(fontname, size=s1).render(*args).get_size()[1]
+    h2 = pg.font.SysFont(fontname, size=s2).render(*args).get_size()[1]
+    factor = (h2 - h1) / (s2 - s1)
+    offset = (h1 * s2 - s1 * h2) / (s2 - s1)
+
+    params = (factor, offset)
+    _font_cache[fontname] = params
+    return params
+
+
+def font_size(fontname, height):
+    """Return font size to use in order to get text with height in pixels"""
+    factor, offset = font_sizing(fontname)
+    return int(round((height - offset) / factor))
+
 
 class Text(LocatedComponent):
     """Basic text"""
 
     dft_look_params = {
-        'size': 12,
+        'height': 12,
         'font': None,  # default system font
         'color': "black",
         'bold': False,
@@ -36,7 +74,7 @@ class Text(LocatedComponent):
                     bottom, center or top
 
                 # Aspect parameters
-                size (int)              : size of font
+                height (int)            : height of text in pixels
                 font (str)              : name of font
                 color (color descr)     : color of display
                 bold (bool)             : use bold writing
@@ -44,7 +82,7 @@ class Text(LocatedComponent):
                 underline (bool)        : underline writing
         """
         self.params = read_params(kwargs, self.cls.dft_look_params, safe=False)
-        kwargs.pop('size', None)
+        kwargs.pop('height', None)
         super().__init__(ref_pos=ref_pos, size=None, **kwargs)
 
         self._string = string
@@ -58,7 +96,7 @@ class Text(LocatedComponent):
         # Initiate font
         font = pg.font.SysFont(
             name=self.params.font,
-            size=self.params.size,
+            size=font_size(self.params.font, self.params.height),
             bold=self.params.bold,
             italic=self.params.italic,
         )

@@ -87,17 +87,17 @@ if __name__ == "__main__":
 
         # Middle text
         components.Text(
-            "arial-20-red", (300, 250), h_align="center",
-            font="arial", size=20, color="red"
+            "arial-50-red", (300, 250), h_align="center",
+            font="arial", height=50, color="red"
         ),
         components.Text(
             "candara-20-bold-italic-underline", (300, 300), h_align="center",
-            font="candara", size=20,
+            font="candara", height=20,
             bold=True, italic=True, underline=True,
         ),
         components.ActiveText(
             "italic_hover-underline", (300, 350), h_align="center",
-            size=20,
+            height=20,
             font=("candara", "arial"),
             italic=True,
             underline=(False, True),
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         ),
         components.ActiveText(
             "italic_click-bold", (300, 400), h_align="center",
-            size=20,
+            height=20,
             font=("candara", DFT, None),
             italic=True,
             bold=(False, False, True),
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         ),
         components.ActiveText(
             "italic_hover-underline_click-bold", (300, 450), h_align="center",
-            size=20,
+            height=20,
             font = ("candara", "arial"),
             underline=(DFT, True),
             bold=(False, False, True),
