@@ -13,7 +13,7 @@ class ActiveRectangle(ActiveLocatedShape):
         Args:
             ref_pos (2-int-tuple)   : reference position
                 default is top-left
-            size (2-int-tuple)      : size of rectangle
+            size (2-int-tuple)      : size of rectangle in pixels
             **kwargs                : aspect & position description
                 @see ActiveShape
                 @see LocatedComponent
@@ -30,6 +30,8 @@ class ActiveRectangle(ActiveLocatedShape):
             # # (that goes outside rectangle and ignore corners)
             x, y = self.position
             dx, dy = self.cache.size
+            dx -= 1
+            dy -= 1
             width = min([width, dx, dy])
             delta_p = (width-1) // 2
             delta_m = (width-1) // 2 + ((width+1) % 2)
