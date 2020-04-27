@@ -40,9 +40,11 @@ class ActiveDisk(ActiveLocatedShape):
 
     def display_(self, surface, color, outline, width):
         """Display disk regarding given aspect"""
+        w_outline = bool(outline and width)
         if color:
-            pg.draw.circle(surface, color, self.center, self.radius)
-        if outline and width:
+            # When drawn with border, reduce radius so it does not poke out
+            pg.draw.circle(surface, color, self.center, self.radius - w_outline)
+        if w_outline:
             pg.draw.circle(surface, outline, self.center, self.radius, width)
 
     def is_within(self, position):
