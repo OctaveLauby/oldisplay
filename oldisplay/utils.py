@@ -1,8 +1,75 @@
 from olutils import Param, read_params, DFT
 
 
+def split_params(params, n, default=DFT, extend_type=tuple):
+    """Split an extended dict of params into n set of params
+
+    Args:
+        params (dict)       : extended params to split
+            for a given parameter, one can give 1-to-n values within an object
+            of type extend_type. Value at position i will correspond to value
+            of param for i_th dictionary. If a value is default, the value
+            will be replaced by the one in previous dictionary
+        n (int)             : number of dict of params to build
+        default (object)    : default object to use as default value
+            if i_th value of a param equal to default, its value is replaced
+            by the one of (i-1)_th
+        extend_type (type|tuple[type]): type used to extend values of params
+            must be iterable type
+
+    Examples:
+        >>> params = {'a': 1, 'b': (2, 20), 'c': (3, DFT, 30)}
+        >>> split_params(params, 3)
+        [
+            {'a': 1, 'b': 2, 'c': 3},
+            {'a': 1, 'b': 20, 'c': 3},
+            {'a': 1, 'b': 20, 'c': 30},
+        ]
+
+        >>> params = {'a': 1, 'b': DFT, 'c': 3}
+        >>> split_params(params, 3)
+        [{'a': 1, 'b': DFT, 'c': 3}, None, None]
+
+    Return:
+        (list[Param]): n dict of params
+    """
+    assert n > 0
+
+    # Read params
+    param_dicts = [{} for i in range(n)]
+    for key, extend_val in params.items():
+        if not isinstance(extend_val, extend_type):
+            param_dicts[0][key] = extend_val
+            continue
+
+        prev_val = default
+        for i, val in enumerate(extend_val):
+            try:
+                param_dicts[i][key] = prev_val if val is default else val
+            except IndexError:
+                raise ValueError(
+                    f"Parameter '{key}' has more than n={n} values"
+                )
+            prev_val = val
+
+    # Complete params
+    prev_kwargs = param_dicts[0]
+    result = [prev_kwargs]
+    for kwargs in param_dicts[1:]:
+        if not kwargs:
+            result.append(None)
+            continue
+
+        ext_kwargs = prev_kwargs.copy()
+        ext_kwargs.update(kwargs)
+        result.append(Param(ext_kwargs))
+        prev_kwargs = ext_kwargs
+
+    return result
+
+
 def read_look(params, dft_params, safe=False, default=DFT):
-    """Read params to return normal, hovered and clicked look
+    """Read params to split normal, hovered and clicked params
 
 
     Args:
@@ -44,44 +111,22 @@ def read_look(params, dft_params, safe=False, default=DFT):
         (3-dict-tuple) parameters for normal, hovered and clicked look
             hovered and clicked params can be None
     """
-    # Ensure params has all key
-    params = read_params(params, dft_params, safe=safe, default=default)
+    # Split params
+    normal, hovered, clicked = tuple(split_params(
+        params, 3, default=default, extend_type=(list, tuple)
+    ))
 
-    # Gather params for normal, hovered and clicked look
-    normal = {}
-    hovered = {}
-    clicked = {}
-    for key, val in params.items():
-        if isinstance(val, (list, tuple)):
-            if len(val) < 1 or len(val) > 3:
-                raise ValueError(
-                    f"Expecting 1-to-3 values for param '{key}', one for"
-                    f" normal look, hovered look (opt.) & clicked look (opt.)"
-                    f": got {len(val)} values"
-                )
-            if len(val) >= 1:
-                normal[key] = dft_params[key] if val[0] is default else val[0]
-            if len(val) >= 2:
-                hovered[key] = normal[key] if val[1] is default else val[1]
-            if len(val) >= 3:
-                clicked[key] = hovered[key] if val[2] is default else val[2]
-        else:
-            normal[key] = val
-
-    # Ensure each set has all params
-    normal = Param(normal)
-
+    # Complete with default
+    normal = read_params(normal, dft_params, safe=safe)
     if hovered:
-        hovered = read_params(hovered, normal)
-    else:
-        hovered = None
-
-    if hovered and clicked:
-        clicked = read_params(clicked, hovered)
-    elif clicked:
-        clicked = read_params(clicked, normal)
-    else:
-        clicked = None
+        hovered = read_params(hovered, dft_params, safe=safe)
+    if clicked:
+        clicked = read_params(clicked, dft_params, safe=safe)
 
     # Return result
     return normal, hovered, clicked
+
+
+if __name__ == "__main__":
+    params = {'a': 1, 'b': (2, 20), 'c': (3, DFT, 30)}
+    print(split_params(params, 3))
