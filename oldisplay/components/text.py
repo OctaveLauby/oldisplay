@@ -111,21 +111,16 @@ class Text(LocatedObject, Shape2D):
         Args:
             string (str)            : text displayed
             ref_pos (2-int-tuple)   : position of text
-            **kwargs                : location and aspect parameters
+            align (str)             : alignment with ref_pos
+                'center', 'top-left', 'bot-right', 'top-center', ...
 
-                # Location parameters
-                h_align (str)           : where position is regarding text (x-axis)
-                    left, center or right
-                v_align (str)           : where position is regarding text (y-axis)
-                    bottom, center or top
-
-                # Aspect parameters
-                height (int)            : height of text in pixels
-                font (str)              : name of font
-                color (color descr)     : color of display
-                bold (bool)             : use bold writing
-                italic  (bool)          : use italic writing
-                underline (bool)        : underline writing
+            # Aspect parameters
+            height (int)            : height of text in pixels
+            font (str)              : name of font
+            color (color descr)     : color of display
+            bold (bool)             : use bold writing
+            italic  (bool)          : use italic writing
+            underline (bool)        : underline writing
         """
         super().__init__(ref_pos=ref_pos, size=None, **kwargs)
         self._string = string

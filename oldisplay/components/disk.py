@@ -21,9 +21,11 @@ class Disk(LocatedObject, Shape2D):
             ref_pos (2-int-tuple)   : reference position of disk
                 default is center
             radius (int)            : radius of disk in pixels
-            **kwargs                : aspect & position description
-                @see LocatedObject
-                @see Shape2D
+            align (str)             : alignment with ref_pos
+                'center', 'top-left', 'bot-right', 'top-center', ...
+            color (color)           : inside color
+            outline (color)         : outline color
+            width (int)             : width of outline
         """
         super().__init__(ref_pos, (radius*2, radius*2), **kwargs)
         self._radius = radius
@@ -38,14 +40,18 @@ class Disk(LocatedObject, Shape2D):
         """Radius in pixels"""
         return self._radius
 
-    def display(self, surface, color, outline, width):
-        """Display disk regarding given aspect"""
-        w_outline = bool(outline and width)
-        if color:
+    def display(self, surface, **params):
+        """Display disk regarding given look parameters"""
+        w_outline = bool(params['outline'] and params['width'])
+        if params['color']:
             # When drawn with border, reduce radius so it does not poke out
-            pg.draw.circle(surface, color, self.center, self.radius - w_outline)
+            pg.draw.circle(
+                surface, params['color'], self.center, self.radius - w_outline
+            )
         if w_outline:
-            pg.draw.circle(surface, outline, self.center, self.radius, width)
+            pg.draw.circle(
+                surface, params['outline'], self.center, self.radius, params['width']
+            )
 
 
 class ActiveDisk(Disk, ActiveShape):

@@ -50,7 +50,7 @@ class Shape(Component):
         return self.display(surface, **self.params)
 
     @abstractmethod
-    def display(self, surface, **kwargs):
+    def display(self, surface, **params):
         raise NotImplementedError
 
 

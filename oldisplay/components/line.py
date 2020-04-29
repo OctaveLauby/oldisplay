@@ -48,17 +48,16 @@ class Segment(Shape1D):
         Args:
             p1 (2-int-tuple)    : starting position
             p2 (2-int-tuple)    : ending position
-            **kwargs    : aspect of shape
-                color (color)   : color of lines
-                width (int)     : width of lines
+            color (color)   : color of lines
+            width (int)     : width of lines
         """
         super().__init__(**kwargs)
         self.p1 = p1
         self.p2 = p2
 
-    def display(self, surface, color, width):
+    def display(self, surface, **params):
         """Display segment"""
-        draw_segment(surface, color, self.p1, self.p2, width)
+        draw_segment(surface, params['color'], self.p1, self.p2, params['width'])
 
 
 class Line(Shape1D):
@@ -68,16 +67,15 @@ class Line(Shape1D):
 
         Args:
             line (list) : list of points
-            **kwargs    : aspect of shape
-                color (color)   : color of lines
-                width (int)     : width of lines
+            color (color)   : color of lines
+            width (int)     : width of lines
         """
         super().__init__(**kwargs)
         self.points = points
 
-    def display(self, surface, color, width):
+    def display(self, surface, **params):
         """Display line"""
-        draw_line(surface, self.points, color, width)
+        draw_line(surface, self.points, params['color'], params['width'])
 
 
 class LineSet(Shape1D):
@@ -87,13 +85,12 @@ class LineSet(Shape1D):
 
         Args:
             lines (list): list of lines (1 line is list[2-int-tuple])
-            **kwargs    : aspect of shape
-                color (color)   : color of lines
-                width (int)     : width of lines
+            color (color)   : color of lines
+            width (int)     : width of lines
         """
         super().__init__(**kwargs)
         self.lines = lines
 
-    def display(self, surface, color, width):
+    def display(self, surface, **params):
         """Display line"""
-        draw_lines(surface, self.lines, color, width)
+        draw_lines(surface, self.lines, params['color'], params['width'])

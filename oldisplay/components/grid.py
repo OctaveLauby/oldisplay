@@ -10,7 +10,7 @@ class Grid(LineSet):
         self.dx = dx
         self.dy = dy
 
-    def display(self, surface, **kwargs):
+    def display(self, surface, **params):
         """Display grid on surface"""
 
         # -- Build lines
@@ -31,4 +31,4 @@ class Grid(LineSet):
 
         # -- Display
         self.lines = lines
-        super().display(surface, **kwargs)
+        super().display(surface, **params)
