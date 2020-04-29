@@ -2,7 +2,7 @@ from abc import abstractmethod
 from olutils import read_params
 
 from oldisplay.collections import Color
-from oldisplay.utils import read_look
+from oldisplay.utils import split_params
 from .component import Component, ActiveComponent, LocatedComponent
 
 
@@ -38,7 +38,9 @@ class ActiveShape(ActiveComponent):
         super().__init__(**kwargs)
 
         # Read Looks
-        looks = read_look(kwargs, self.cls.dft_look_params, safe=False)
+        looks = split_params(
+            kwargs, 3, dft_params=self.cls.dft_look_params, safe=False,
+        )
         for look in looks:
             if look is None:
                 continue

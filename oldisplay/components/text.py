@@ -2,7 +2,7 @@ import pygame as pg
 from olutils import read_params
 
 from oldisplay.collections import Color
-from oldisplay.utils import read_look
+from oldisplay.utils import split_params
 from .component import ActiveComponent, LocatedComponent
 
 _font_cache = {
@@ -170,8 +170,8 @@ class ActiveText(ActiveComponent):
         loc_params = read_params(
             kwargs, LocatedComponent.dft_loc_params, safe=False
         )
-        normal, hovered, clicked = read_look(
-            kwargs, Text.dft_look_params, safe=False
+        normal, hovered, clicked = split_params(
+            kwargs, 3, dft_params=Text.dft_look_params, safe=False
         )
 
         # Aspect cache
