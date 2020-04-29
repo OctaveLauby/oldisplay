@@ -1,3 +1,4 @@
+"""Objects to draw lines"""
 import pygame as pg
 
 from .shape import Shape1D
@@ -41,6 +42,7 @@ def draw_lines(surface, lines, color, width):
 # Classes
 
 class Segment(Shape1D):
+    """Simple segment"""
 
     def __init__(self, p1, p2, **kwargs):
         """Initialize a segment
@@ -61,6 +63,7 @@ class Segment(Shape1D):
 
 
 class Line(Shape1D):
+    """Continuous line"""
 
     def __init__(self, points, **kwargs):
         """Initialize a line
@@ -79,6 +82,7 @@ class Line(Shape1D):
 
 
 class LineSet(Shape1D):
+    """Set of lines"""
 
     def __init__(self, lines, **kwargs):
         """Initialize a set of line

@@ -1,3 +1,4 @@
+"""Objects to draw rectangles"""
 import pygame as pg
 
 from .component import LocatedObject
@@ -7,6 +8,7 @@ from .shape import Shape2D, ActiveShape
 
 
 class Rectangle(LocatedObject, Shape2D):
+    """Rectangle shape"""
 
     def __init__(self, ref_pos, size, **kwargs):
         """Initialize instance of rectangle

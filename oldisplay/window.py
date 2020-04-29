@@ -3,7 +3,7 @@ import pygame as pg
 from olutils import read_params, wait_until
 from threading import Thread
 
-from oldisplay.collections.colors import Color, COLORS
+from oldisplay.collections.colors import Color
 
 
 
@@ -14,7 +14,7 @@ class WindowSettings:
         'name': "Application Window",
         'size': (700, 700),
         'fps': 20,
-        'background': COLORS.white,
+        'background': Color.get('white'),
     }
 
     def __init__(self, **kwargs):
@@ -25,7 +25,7 @@ class WindowSettings:
             size (2-int-tuple): size of window in pixels
             fps (int):          number of frags per seconds
             background (color description): color of background
-                @see collections.COLORS for available colors
+                @see oldisplay.collections.COLORS for available colors
         """
         params = read_params(kwargs, self.__class__.dft_params)
         for param, value in params.items():

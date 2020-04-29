@@ -1,3 +1,4 @@
+"""Base classes for shape components"""
 from abc import abstractmethod
 from olutils import read_params
 
@@ -7,6 +8,13 @@ from .component import ActiveComponent, Component
 
 
 def apply_conversions(params, param_conv):
+    """Apply conversions to params
+
+    Args:
+        params (dict)       : dictionary of (param_name, param_value)
+        param_conv (dict)   : dictionary of (param_name, conversion_func)
+            keys must be within params
+    """
     if params is None:
         return
     for key, func in param_conv.items():
@@ -51,6 +59,7 @@ class Shape(Component):
 
     @abstractmethod
     def display(self, surface, **params):
+        """Display shape given look parameters"""
         raise NotImplementedError
 
 

@@ -1,12 +1,11 @@
+"""Objects to draw text"""
 import pygame as pg
-from olutils import read_params
 
 from oldisplay.collections import Color
-from oldisplay.utils import split_params
 from .component import LocatedObject
 from .shape import ActiveShape, Shape2D
 
-_font_cache = {
+_FONT_SIZING_CACHE = {
     # fontname: (height factor, height offset)
 }
 
@@ -23,7 +22,7 @@ def font_sizing(fontname):
             height (in pixels) = factor * size (of font) + offset
     """
     try:
-        return _font_cache[fontname]
+        return _FONT_SIZING_CACHE[fontname]
     except KeyError:
         pass
 
@@ -35,7 +34,7 @@ def font_sizing(fontname):
     offset = (h1 * s2 - s1 * h2) / (s2 - s1)
 
     params = (factor, offset)
-    _font_cache[fontname] = params
+    _FONT_SIZING_CACHE[fontname] = params
     return params
 
 
@@ -88,20 +87,6 @@ class Text(LocatedObject, Shape2D):
         cls.font_cache[key] = font
         return font
 
-    @classmethod
-    def get_surf(cls, string, **params):
-        """Surface of text (pygame.Surface)"""
-        font = cls.get_font(**params)
-        color = Color.get(params['color'])
-        key = (font, color)
-        try:
-            return cls.font_cache[key]
-        except KeyError:
-            pass
-        surf = font.render(string, True, color)
-        cls.surf_cache[key] = surf
-        return surf
-
     def __init__(self, string, ref_pos, **kwargs):
         """Initiate params of text to display
 
@@ -124,25 +109,35 @@ class Text(LocatedObject, Shape2D):
         """
         super().__init__(ref_pos=ref_pos, size=None, **kwargs)
         self._string = string
+        self._surfaces = {}
 
     def init(self):
         """Initiate font and surface cache, requires pygame.init()"""
-        self.size = self.surf().get_size()
+        self.size = self.get_surf().get_size()
 
     @property
     def string(self):
         """Text displayed (str)"""
         return self._string
 
-    def surf(self, params=None):
-        """Text surface to draw"""
+    def get_surf(self, params=None):
+        """Surface of text (pygame.Surface)"""
         params = self.params if params is None else params
-        return self.cls.get_surf(self.string, **params)
+        font = self.cls.get_font(**params)
+        color = Color.get(params['color'])
+        key = (font, color)
+        try:
+            return self._surfaces[key]
+        except KeyError:
+            pass
+        surf = font.render(self.string, True, color)
+        self._surfaces[key] = surf
+        return surf
 
-    def position(self, params=None):
+    def get_pos(self, params=None):
         """Position of text"""
         params = self.params if params is None else params
-        size = self.surf(params).get_size()
+        size = self.get_surf(params).get_size()
         return self.cls.position_func(
             self.ref_pos, size, self.h_align, self.v_align
         )
@@ -153,8 +148,8 @@ class Text(LocatedObject, Shape2D):
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        surf = self.surf(params=params)
-        position = self.position(params=params)
+        surf = self.get_surf(params=params)
+        position = self.get_pos(params=params)
         surface.blit(surf, position)
 
 
@@ -164,6 +159,6 @@ class ActiveText(Text, ActiveShape):
     def is_within(self, position):
         """Return whether position is within hit box"""
         x, y = position
-        sx, sy = self.position()
-        dx, dy = self.surf().get_size()
+        sx, sy = self.position
+        dx, dy = self.size
         return (sx < x < sx+dx) and (sy < y < sy+dy)

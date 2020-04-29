@@ -1,3 +1,4 @@
+"""Objects to draw disks and circles"""
 import numpy as np
 import pygame as pg
 
@@ -7,6 +8,7 @@ from .shape import Shape2D, ActiveShape
 
 
 class Disk(LocatedObject, Shape2D):
+    """Disk shape"""
 
     dft_location = {
         'h_align': align.CENTER,

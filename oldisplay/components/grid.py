@@ -1,7 +1,9 @@
+"""Objects to draw grids"""
 from .line import LineSet
 
 
 class Grid(LineSet):
+    """Grid that fills a surface"""
 
     def __init__(self, dx, dy, **kwargs):
         """Initiate a grid"""

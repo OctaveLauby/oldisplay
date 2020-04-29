@@ -1,3 +1,4 @@
+"""Base classes for components of an application"""
 import pygame as pg
 from abc import ABC, abstractmethod
 
@@ -18,16 +19,13 @@ class Component(ABC):
         Args:
             **kwargs        : to handle diamond problem
         """
-        pass
 
     def init(self):
         """Additional initiation to do once pygame is initialized"""
-        pass
 
     @abstractmethod
     def update(self, surface, events=None):
         """Update display on surface"""
-        pass
 
     # ----------------------------------------------------------------------- #
     # Utils
@@ -183,22 +181,18 @@ class ActiveComponent(Component):
 
     def act_click(self):
         """Action when user click on component"""
-        pass
 
     def act_release_click(self):
         """Action when user release click on component"""
-        pass
 
     def act_release_only(self):
         """Action when user release click on component but didn't click it"""
-        pass
 
     def act_release_out(self):
         """Action when user release click out of component after clicking it"""
-        pass
 
 
-class LocatedObject(object):
+class LocatedObject:
     """Base class for located objects"""
 
     dft_location = {

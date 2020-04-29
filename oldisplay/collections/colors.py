@@ -105,6 +105,7 @@ class Color(tuple):
     """Class to define and manage colors"""
 
     def __new__(cls, r, g, b):
+        """Return new color"""
         for comp in (r, g, b):
             if not 0 <= comp < 256:
                 raise ValueError("Color component must be b/w 0 and 255")
@@ -157,6 +158,7 @@ class Color(tuple):
 
     @classmethod
     def mix(cls, *colors):
+        """Return mean of colors"""
         if not colors:
             raise TypeError("Expecting at least one color to mix")
         if len(colors) == 1:

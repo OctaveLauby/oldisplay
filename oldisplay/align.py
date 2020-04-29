@@ -1,3 +1,4 @@
+"""Tools compute component position regarding its alignment with a point"""
 from olutils import read_params
 
 LEFT = "left"

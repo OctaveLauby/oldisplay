@@ -1,8 +1,9 @@
-from olutils import Param, read_params, DFT
+"""Common util functions over project"""
+from olutils import read_params, DFT
 
 
-def split_params(params, n, dft_value=DFT, extend_type=tuple, dft_params=None,
-                 safe=False):
+def split_params(params, n, dft_value=DFT, extend_type=tuple,
+                 dft_params=None, safe=False):
     """Split an extended dict of params into n dicts of params
 
     Args:
