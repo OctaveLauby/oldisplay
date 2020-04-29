@@ -40,9 +40,14 @@ class Shape(Component):
         apply_conversions(look, self.cls.par_conv)
         self._params = look
 
+    @property
+    def params(self):
+        """Parameters for display"""
+        return self._params
+
     def update(self, surface, events=None):
         """Update display of shape on surface"""
-        return self.display(surface, **self._params)
+        return self.display(surface, **self.params)
 
     @abstractmethod
     def display(self, surface, **kwargs):
@@ -69,7 +74,8 @@ class Shape2D(Shape):
 
 
 class ActiveShape(ActiveComponent, Shape):
-    """
+    """Base class for active shapes w. potential look change when hovered or clicked
+
     To Implement:
         * is_within     return whether a position is within component
         * display       display shape on surface given display kwargs
@@ -81,6 +87,7 @@ class ActiveShape(ActiveComponent, Shape):
     """
 
     def __init__(self, **kwargs):
+        """Initiate active shape"""
         normal, hovered, clicked = split_params(
             kwargs, 3, dft_params=self.cls.dft_look
         )
@@ -88,9 +95,28 @@ class ActiveShape(ActiveComponent, Shape):
             apply_conversions(params, self.par_conv)
         kwargs.update(normal)
         super().__init__(**kwargs)
-        self.kwargs_n = normal
-        self.kwargs_h = hovered
-        self.kwargs_c = clicked
+        self._params = normal
+        self._params_h = hovered
+        self._params_c = clicked
+
+    @property
+    def params_n(self):
+        """Parameters for normal display"""
+        return self._params
+
+    @property
+    def params_h(self):
+        """Parameters for hovered display"""
+        if self._params_h is None:
+            return self.params_n
+        return self._params_h
+
+    @property
+    def params_c(self):
+        """Parameters for clicked display"""
+        if self._params_c is None:
+            return self.params_h
+        return self._params_c
 
     def display_normal(self, surface):
         """Basic display of element
@@ -98,7 +124,7 @@ class ActiveShape(ActiveComponent, Shape):
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        return self.display(surface, **self.kwargs_n)
+        return self.display(surface, **self.params_n)
 
     def display_hovered(self, surface):
         """Display when mouse passes over the hit box
@@ -106,9 +132,7 @@ class ActiveShape(ActiveComponent, Shape):
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        if self.kwargs_h is None:
-            return self.display_normal(surface)
-        return self.display(surface, **self.kwargs_h)
+        return self.display(surface, **self.params_h)
 
     def display_clicked(self, surface):
         """Display when user click on component
@@ -116,6 +140,4 @@ class ActiveShape(ActiveComponent, Shape):
         Args:
             surface (pygame.Surface): surface to draw on (can be a screen)
         """
-        if self.kwargs_c is None:
-            return self.display_hovered(surface)
-        return self.display(surface, **self.kwargs_c)
+        return self.display(surface, **self.params_c)

@@ -22,8 +22,8 @@ class Disk(LocatedObject, Shape2D):
                 default is center
             radius (int)            : radius of disk in pixels
             **kwargs                : aspect & position description
-                @see ActiveShape
-                @see LocatedComponent
+                @see LocatedObject
+                @see Shape2D
         """
         super().__init__(ref_pos, (radius*2, radius*2), **kwargs)
         self._radius = radius

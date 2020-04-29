@@ -201,7 +201,7 @@ class ActiveComponent(Component):
 class LocatedObject(object):
     """Base class for located objects"""
 
-    dft_loc_params = {
+    dft_location = {
         'h_align': align.LEFT,
         'v_align': align.TOP,
     }
@@ -223,7 +223,7 @@ class LocatedObject(object):
         self.size = size
 
         kwargs = align.read_align_params(
-            kwargs, self.cls.dft_loc_params, safe=False
+            kwargs, self.__class__.dft_location, safe=False
         )
         self.h_align = kwargs.h_align
         self.v_align = kwargs.v_align

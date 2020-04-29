@@ -16,8 +16,8 @@ class Rectangle(LocatedObject, Shape2D):
                 default is top-left
             size (2-int-tuple)      : size of rectangle in pixels
             **kwargs                : aspect & position description
-                @see ActiveShape
-                @see LocatedComponent
+                @see LocatedObject
+                @see Shape2D
         """
         super().__init__(ref_pos, size, **kwargs)
         self.cache = pg.Rect(self.position, size)
