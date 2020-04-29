@@ -16,7 +16,7 @@ if __name__ == "__main__":
         ),
 
         # Shapes
-        components.ActiveRectangle(
+        components.Rectangle(
             ref_pos=(0, 0), size=(50, 50),
             color='blue'
         ),
@@ -32,11 +32,11 @@ if __name__ == "__main__":
             ref_pos=(325, 25), radius=25,
             color=('red', 'orange', 'green'), width=(DFT, 3), outline=(DFT, DFT, 'purple')
         ),
-        components.ActiveDisk(
+        components.Disk(
             (425, 25), 25,
             color='cyan', width=10, outline='purple',
         ),
-        components.ActiveRectangle(  # Outline width equal size/2
+        components.Rectangle(  # Outline width equal size/2
             (500, 0), (50, 50),
             color='red', outline='cyan', width=25,
         ),
@@ -46,11 +46,11 @@ if __name__ == "__main__":
         ),
 
         # Placed shapes
-        components.ActiveRectangle(
+        components.Rectangle(
             (0, 150), (50, 50), v_align='bot',
             color='black'
         ),
-        components.ActiveRectangle(
+        components.Rectangle(
             (100, 150), (50, 50), h_align='rgt',
             color='black'
         ),
