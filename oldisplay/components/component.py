@@ -97,8 +97,8 @@ class ActiveComponent(Component):
         self._visible = True
 
         # Mouse tracking
-        self.clicked = False
-        self.hovered = False
+        self.is_clicked = False
+        self.is_hovered = False
 
     def init(self):
         """Additional initiation to do once pygame is initialized"""
@@ -131,28 +131,28 @@ class ActiveComponent(Component):
     def _check_event(self, event):
         """The button needs to be passed events from your program event loop."""
         if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
-            if self.hovered:
-                self.clicked = True
+            if self.is_hovered:
+                self.is_clicked = True
                 self.act_click()
         elif event.type == pg.MOUSEBUTTONUP and event.button == 1:
-            if self.clicked and self.hovered:
+            if self.is_clicked and self.is_hovered:
                 self.act_release_click()
-            elif self.hovered:
+            elif self.is_hovered:
                 self.act_release_only()
-            elif self.clicked:
+            elif self.is_clicked:
                 self.act_release_out()
-            self.clicked = False
+            self.is_clicked = False
 
     def _check_hover(self):
         """Return whether mouse is within component"""
-        self.hovered = self.is_within(pg.mouse.get_pos())
-        return self.hovered
+        self.is_hovered = self.is_within(pg.mouse.get_pos())
+        return self.is_hovered
 
     def _display(self, surface):
         """Display component if visible"""
-        if self.clicked:
+        if self.is_clicked:
             func = self.display_clicked
-        elif self.hovered:
+        elif self.is_hovered:
             func = self.display_hovered
         else:
             func = self.display_normal
@@ -164,8 +164,8 @@ class ActiveComponent(Component):
 
         # Mouse / Event tracking
         if not self.enabled:
-            self.clicked = False
-            self.hovered = False
+            self.is_clicked = False
+            self.is_hovered = False
         else:
             self._check_hover()
             for event in events:
