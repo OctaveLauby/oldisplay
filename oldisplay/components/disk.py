@@ -8,7 +8,7 @@ from .shape import Shape2D, ActiveShape
 
 class Disk(LocatedObject, Shape2D):
 
-    dft_loc_params = {
+    dft_location = {
         'h_align': align.CENTER,
         'v_align': align.CENTER,
     }
