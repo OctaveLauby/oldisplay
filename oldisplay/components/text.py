@@ -3,7 +3,7 @@ from olutils import read_params
 
 from oldisplay.collections import Color
 from oldisplay.utils import split_params
-from .component import ActiveComponent, LocatedComponent
+from .component import ActiveComponent, Component, LocatedObject
 
 _font_cache = {
     # fontname: (height factor, height offset)
@@ -44,7 +44,7 @@ def font_size(fontname, height):
     return int(round((height - offset) / factor))
 
 
-class Text(LocatedComponent):
+class Text(LocatedObject, Component):
     """Basic text"""
 
     dft_look_params = {
@@ -84,6 +84,7 @@ class Text(LocatedComponent):
         self.params = read_params(kwargs, self.cls.dft_look_params, safe=False)
         kwargs.pop('height', None)
         super().__init__(ref_pos=ref_pos, size=None, **kwargs)
+        self.ref_pos
 
         self._string = string
         self._font = None
@@ -168,7 +169,7 @@ class ActiveText(ActiveComponent):
 
         # Aspect params
         loc_params = read_params(
-            kwargs, LocatedComponent.dft_loc_params, safe=False
+            kwargs, LocatedObject.dft_loc_params, safe=False
         )
         normal, hovered, clicked = split_params(
             kwargs, 3, dft_params=Text.dft_look_params, safe=False

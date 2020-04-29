@@ -1,6 +1,6 @@
 import pygame as pg
 
-from .shape import LinearShape
+from .shape import Shape1D
 
 
 # --------------------------------------------------------------------------- #
@@ -40,7 +40,7 @@ def draw_lines(surface, lines, color, width):
 # --------------------------------------------------------------------------- #
 # Classes
 
-class Segment(LinearShape):
+class Segment(Shape1D):
 
     def __init__(self, p1, p2, **kwargs):
         """Initialize a segment
@@ -56,12 +56,12 @@ class Segment(LinearShape):
         self.p1 = p1
         self.p2 = p2
 
-    def update(self, surface, events=None):
+    def display(self, surface, color, width):
         """Display segment"""
-        draw_segment(surface, self.color, self.p1, self.p2, self.width)
+        draw_segment(surface, color, self.p1, self.p2, width)
 
 
-class Line(LinearShape):
+class Line(Shape1D):
 
     def __init__(self, points, **kwargs):
         """Initialize a line
@@ -75,12 +75,12 @@ class Line(LinearShape):
         super().__init__(**kwargs)
         self.points = points
 
-    def update(self, surface, events=None):
+    def display(self, surface, color, width):
         """Display line"""
-        draw_line(surface, self.points, self.color, self.width)
+        draw_line(surface, self.points, color, width)
 
 
-class LineSet(LinearShape):
+class LineSet(Shape1D):
 
     def __init__(self, lines, **kwargs):
         """Initialize a set of line
@@ -94,6 +94,6 @@ class LineSet(LinearShape):
         super().__init__(**kwargs)
         self.lines = lines
 
-    def update(self, surface, events=None):
+    def display(self, surface, color, width):
         """Display line"""
-        draw_lines(surface, self.lines, self.color, self.width)
+        draw_lines(surface, self.lines, color, width)

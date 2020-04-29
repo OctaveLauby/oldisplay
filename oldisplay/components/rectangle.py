@@ -1,11 +1,12 @@
 import pygame as pg
 
+from .component import LocatedObject
 from .line import LineSet
-from .shape import ActiveLocatedShape
+from .shape import Shape2D, ActiveShape
 
 
-class ActiveRectangle(ActiveLocatedShape):
-    """Rectangle w. potential outline & look change when hovered or clicked"""
+
+class Rectangle(LocatedObject, Shape2D):
 
     def __init__(self, ref_pos, size, **kwargs):
         """Initialize instance of rectangle
@@ -21,7 +22,7 @@ class ActiveRectangle(ActiveLocatedShape):
         super().__init__(ref_pos, size, **kwargs)
         self.cache = pg.Rect(self.position, size)
 
-    def display_(self, surface, color, outline, width):
+    def display(self, surface, color, outline, width):
         """Display rectangle regarding given aspect"""
         if color:
             pg.draw.rect(surface, color, self.cache)
@@ -44,6 +45,10 @@ class ActiveRectangle(ActiveLocatedShape):
                 [(x_rgt, y), (x_rgt, y+dx)],
             ], color=outline, width=width)
             line.update(surface)
+
+
+class ActiveRectangle(Rectangle, ActiveShape):
+    """Rectangle w. potential outline & look change when hovered or clicked"""
 
     def is_within(self, position):
         """Return whether position is within rectangle"""

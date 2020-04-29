@@ -1,6 +1,5 @@
 import pygame as pg
 from abc import ABC, abstractmethod
-from olutils import read_params
 
 from oldisplay import align
 
@@ -9,14 +8,8 @@ class Component(ABC):
     """Base class for components of a surface
 
     To Implement:
-
-        # update
-            update display
-
-    Optional:
-
-        # init
-            additional initiation for once pygame is initialized
+        *   update      update display
+        (*) init        additional initiation once pygame is initialized
     """
 
     def __init__(self, **kwargs):
@@ -26,7 +19,6 @@ class Component(ABC):
             **kwargs        : to handle diamond problem
         """
         pass
-
 
     def init(self):
         """Additional initiation to do once pygame is initialized"""
@@ -58,35 +50,15 @@ class ActiveComponent(Component):
     """Base for components of a surface
 
     To Implement:
-
-        # is_within
-            Return whether a position is within component
-
-        # display_normal
-            Method to display shape
-
-    Optional
-
-        # init
-            additional initiation for once pygame is initialized
-
-        # display_hovered
-            Method to display shape when hovered
-
-        # display_clicked
-            Method to display shape when clicked
-
-        # act_click
-            Method called after click on component
-
-        # act_release_click
-            Method called after click and release on component
-
-        # act_release_only
-            Method called after release on component (but no click on it)
-
-        # act_release_out
-            Method called after click on component and release outside
+        *   is_within           whether a position is within component
+        *   display_normal      display shape
+        (*) init                additional initiation once pygame is initialized
+        (*) display_hovered     display shape when hovered
+        (*) display_clicked     display shape when clicked
+        (*) act_click           called after click on component
+        (*) act_release_click   called after click and release on component
+        (*) act_release_only    called after release on component (but no click on it)
+        (*) act_release_out     called after click on component and release outside
     """
 
     def __init__(self, **kwargs):
@@ -99,10 +71,6 @@ class ActiveComponent(Component):
         # Mouse tracking
         self.is_clicked = False
         self.is_hovered = False
-
-    def init(self):
-        """Additional initiation to do once pygame is initialized"""
-        pass
 
     # ----------------------------------------------------------------------- #
     # Component activation
@@ -230,8 +198,8 @@ class ActiveComponent(Component):
         pass
 
 
-class LocatedComponent(Component):
-    """Base class for located components with position management"""
+class LocatedObject(object):
+    """Base class for located objects"""
 
     dft_loc_params = {
         'h_align': align.LEFT,
@@ -251,7 +219,7 @@ class LocatedComponent(Component):
         """
         super().__init__(**kwargs)
         self._pos = None
-        self.ref_pos = ref_pos
+        self._ref_pos = ref_pos
         self.size = size
 
         kwargs = align.read_align_params(
@@ -264,7 +232,7 @@ class LocatedComponent(Component):
     def position(self):
         """Utility position"""
         if self._pos is None:
-            self._pos = self.cls.position_func(
+            self._pos = self.__class__.position_func(
                 self.ref_pos, self.size, self.h_align, self.v_align
             )
         return self._pos

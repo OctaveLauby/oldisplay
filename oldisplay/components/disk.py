@@ -2,11 +2,11 @@ import numpy as np
 import pygame as pg
 
 from oldisplay import align
-from .shape import ActiveLocatedShape
+from .component import LocatedObject
+from .shape import Shape2D, ActiveShape
 
 
-class ActiveDisk(ActiveLocatedShape):
-    """Disk w. potential outline & look change when hovered or clicked"""
+class Disk(LocatedObject, Shape2D):
 
     dft_loc_params = {
         'h_align': align.CENTER,
@@ -38,7 +38,7 @@ class ActiveDisk(ActiveLocatedShape):
         """Radius in pixels"""
         return self._radius
 
-    def display_(self, surface, color, outline, width):
+    def display(self, surface, color, outline, width):
         """Display disk regarding given aspect"""
         w_outline = bool(outline and width)
         if color:
@@ -46,6 +46,10 @@ class ActiveDisk(ActiveLocatedShape):
             pg.draw.circle(surface, color, self.center, self.radius - w_outline)
         if w_outline:
             pg.draw.circle(surface, outline, self.center, self.radius, width)
+
+
+class ActiveDisk(Disk, ActiveShape):
+    """Disk w. potential outline & look change when hovered or clicked"""
 
     def is_within(self, position):
         """Return whether position is within disk"""

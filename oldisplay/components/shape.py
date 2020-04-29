@@ -3,110 +3,119 @@ from olutils import read_params
 
 from oldisplay.collections import Color
 from oldisplay.utils import split_params
-from .component import Component, ActiveComponent, LocatedComponent
+from .component import ActiveComponent, Component
 
 
-class ActiveShape(ActiveComponent):
-    """Base class for 2d shapes with look change when hovered or clicked
-
-    Handle an outline and look changes when hovered or clicked
-
-    To Implement:
-
-        # display_
-            Method to display shape given args=(surface, color, outline, width)
-    """
-
-    dft_look_params = {
-        'color': "white",
-        'outline': "black",
-        'width': None,
-    }
-
-    def __init__(self, **kwargs):
-        """Initialize instance of 2d-shape
-
-        About:
-            For a given parameter, one can give 1-to-3 values within a tuple
-            or a list to precise normal, hovered and/or clicked look
-
-        Args:
-            color (color|tuple)     : inside color
-            outline (color|tuple)   : outline color
-            width (int|tuple)       : width of outline
-        """
-        super().__init__(**kwargs)
-
-        # Read Looks
-        looks = split_params(
-            kwargs, 3, dft_params=self.cls.dft_look_params, safe=False,
-        )
-        for look in looks:
-            if look is None:
-                continue
-            for key in ['color', 'outline']:
-                look[key] = Color.get(look[key])
-        self._look, self._look_h, self._look_c = looks
-
-    @abstractmethod
-    def display_(self, surface, color, outline, width):
-        raise NotImplementedError
-
-    def display_normal(self, surface, *args, **kwargs):
-        """Display shape with normal aspect"""
-        return self.display_(surface, **self._look)
-
-    def display_hovered(self, surface, *args, **kwargs):
-        """Display shape with hovered aspect"""
-        if self._look_h is None:
-            return self.display_normal(surface, *args, **kwargs)
-        return self.display_(surface, **self._look_h)
-
-    def display_clicked(self, surface, *args, **kwargs):
-        """Display shape with clicked aspect"""
-        if self._look_c is None:
-            return self.display_hovered(surface, *args, **kwargs)
-        return self.display_(surface, **self._look_c)
+def apply_conversions(params, param_conv):
+    if params is None:
+        return
+    for key, func in param_conv.items():
+        val = params[key]
+        params[key] = func(val)
 
 
-class ActiveLocatedShape(LocatedComponent, ActiveShape):
-
-    def __init__(self, ref_pos, size, **kwargs):
-        """Initialize instance of rectangle
-
-        Args:
-            ref_pos (2-int-tuple)   : reference position in pixels
-            size (2-int-tuple)      : size of shape in pixels
-            **kwargs                : location and look parameters
-                @see LocatedComponent
-                @see ActiveShape
-        """
-        super().__init__(ref_pos=ref_pos, size=size, **kwargs)
-
-
-class LinearShape(Component):
+class Shape(Component):
     """Base class for linear shapes
 
+    To Specify:
+        * dft_look      class attribute that gives default display kwargs
+        * par_conv      convertions to apply on parameters
+
     To Implement:
-
-        # update
-            Method to display shape
+        * display       display shape on surface given display kwargs
+        (*) init        additional initiation once pygame is initialized
     """
-
-    dft_look = {
-        'color': "black",
-        'width': 2,
-    }
+    dft_look = {}
+    par_conv = {}  # TODO: metaclass to ensure par_conv keys are within dft_look
 
     def __init__(self, **kwargs):
         """Initiate a linear shape
 
         Args:
             **kwargs    : aspect of shape
-                color (color)   : color of lines
-                width (int)     : width of lines
+                @see self.__class__.dft_look
         """
         super().__init__(**kwargs)
-        look = read_params(kwargs, self.cls.dft_look)
-        self.color = Color.get(look.color)
-        self.width = look.width
+        look = read_params(kwargs, self.cls.dft_look, safe=False)
+        apply_conversions(look, self.cls.par_conv)
+        self._params = look
+
+    def update(self, surface, events=None):
+        """Update display of shape on surface"""
+        return self.display(surface, **self._params)
+
+    @abstractmethod
+    def display(self, surface, **kwargs):
+        raise NotImplementedError
+
+
+class Shape1D(Shape):
+    """Base class for linear shapes"""
+    dft_look = {
+        'color': "black",
+        'width': 2,
+    }
+    par_conv = {'color': Color.get}
+
+
+class Shape2D(Shape):
+    """Base class for 2d shapes"""
+    dft_look = {
+        'color': "white",
+        'outline': "black",
+        'width': None,
+    }
+    par_conv = {'color': Color.get, 'outline': Color.get}
+
+
+class ActiveShape(ActiveComponent, Shape):
+    """
+    To Implement:
+        * is_within     return whether a position is within component
+        * display       display shape on surface given display kwargs
+        (*) init                additional initiation once pygame is initialized
+        (*) act_click           called after click on component
+        (*) act_release_click   called after click and release on component
+        (*) act_release_only    called after release on component (but no click on it)
+        (*) act_release_out     called after click on component and release outside
+    """
+
+    def __init__(self, **kwargs):
+        normal, hovered, clicked = split_params(
+            kwargs, 3, dft_params=self.cls.dft_look
+        )
+        for params in [normal, hovered, clicked]:
+            apply_conversions(params, self.par_conv)
+        kwargs.update(normal)
+        super().__init__(**kwargs)
+        self.kwargs_n = normal
+        self.kwargs_h = hovered
+        self.kwargs_c = clicked
+
+    def display_normal(self, surface):
+        """Basic display of element
+
+        Args:
+            surface (pygame.Surface): surface to draw on (can be a screen)
+        """
+        return self.display(surface, **self.kwargs_n)
+
+    def display_hovered(self, surface):
+        """Display when mouse passes over the hit box
+
+        Args:
+            surface (pygame.Surface): surface to draw on (can be a screen)
+        """
+        if self.kwargs_h is None:
+            return self.display_normal(surface)
+        return self.display(surface, **self.kwargs_h)
+
+    def display_clicked(self, surface):
+        """Display when user click on component
+
+        Args:
+            surface (pygame.Surface): surface to draw on (can be a screen)
+        """
+        if self.kwargs_c is None:
+            return self.display_hovered(surface)
+        return self.display(surface, **self.kwargs_c)

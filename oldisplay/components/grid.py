@@ -6,11 +6,11 @@ class Grid(LineSet):
     def __init__(self, dx, dy, **kwargs):
         """Initiate a grid"""
         assert dx > 0, dy > 0
-        super().__init__(lines=None, **kwargs)
+        super().__init__(lines=[], **kwargs)
         self.dx = dx
         self.dy = dy
 
-    def update(self, surface, events=None):
+    def display(self, surface, **kwargs):
         """Display grid on surface"""
 
         # -- Build lines
@@ -31,4 +31,4 @@ class Grid(LineSet):
 
         # -- Display
         self.lines = lines
-        super().update(surface, events=events)
+        super().display(surface, **kwargs)
