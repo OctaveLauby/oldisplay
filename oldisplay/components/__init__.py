@@ -6,5 +6,6 @@ from .line import (
     Line,
     LineSet,
 )
+from .marker import Cross
 from .rectangle import ActiveRectangle, Rectangle
 from .text import ActiveText, Text
