@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
         # Background
         components.Grid(
-            dx=50, dy=50, color="red", width=1,
+            dx=50, dy=50, color="cyan", width=1,
         ),
 
         # Shapes
@@ -34,15 +34,23 @@ if __name__ == "__main__":
         ),
         components.Disk(
             (425, 25), 25,
-            color='cyan', width=10, outline='purple',
+            color='light grey', width=10, outline='purple',
         ),
         components.Rectangle(  # Outline width equal size/2
             (500, 0), (50, 50),
-            color='red', outline='cyan', width=25,
+            color='red', outline='magenta', width=25,
         ),
         components.ActiveRectangle(  # Outline width greater than size/2
             (600, 0), (50, 50),
-            color='red', outline='cyan', width=100,
+            color='red', outline='dark magenta', width=100,
+        ),
+
+        # Markers
+        components.Cross(
+            (100, 100), 5, color='blue'
+        ),
+        components.Cross(
+            (150, 100), 3, color='red', width=2
         ),
 
         # Placed shapes
