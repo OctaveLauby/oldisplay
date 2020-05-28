@@ -62,7 +62,7 @@ COLOR_TUPLES = {
     'medium_violet_red': (199, 21, 133), 'pale_violet_red': (219, 112, 147),
     'deep_pink': (255, 20, 147), 'hot_pink': (255, 105, 180),
     'light_pink': (255, 182, 193), 'pink': (255, 192, 203),
-    'antique_white': (250, 235, 215),
+    'antique_white': (250, 235, 215), 'magenta': (255, 0, 255),
 
     # Brown-ish
     'beige': (245, 245, 220), 'bisque': (255, 228, 196),
@@ -150,10 +150,11 @@ class Color(tuple):
         if isinstance(color, (list, tuple)):
             return cls(*color)
         if isinstance(color, str):
+            key = color.replace(" ", "_").replace("grey", "gray").lower()
             try:
-                return COLORS[color]
+                return COLORS[key]
             except KeyError:
-                raise KeyError(f"Unknown color '{color}'")
+                raise KeyError(f"Unknown color '{color}' (key={key})")
         raise TypeError(f"Can't build color from {type(color)} objects")
 
     @classmethod
