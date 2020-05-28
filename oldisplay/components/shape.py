@@ -67,7 +67,7 @@ class Shape1D(Shape):
     """Base class for linear shapes"""
     dft_look = {
         'color': "black",
-        'width': 2,
+        'width': 1,
     }
     par_conv = {'color': Color.get}
 
