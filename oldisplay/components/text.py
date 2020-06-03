@@ -87,7 +87,7 @@ class Text(LocatedObject, Shape2D):
         cls.font_cache[key] = font
         return font
 
-    def __init__(self, string, ref_pos, **kwargs):
+    def __init__(self, string, ref_pos, rotate=None, **kwargs):
         """Initiate params of text to display
 
         About:
@@ -96,6 +96,7 @@ class Text(LocatedObject, Shape2D):
         Args:
             string (str)            : text displayed
             ref_pos (2-int-tuple)   : position of text
+            rotate (float)          : rotation of text in degrees
             align (str)             : alignment with ref_pos
                 'center', 'top-left', 'bot-right', 'top-center', ...
 
@@ -109,6 +110,7 @@ class Text(LocatedObject, Shape2D):
         """
         super().__init__(ref_pos=ref_pos, size=None, **kwargs)
         self._string = string
+        self._rotate = rotate
         self._surfaces = {}
 
     def init(self):
@@ -119,6 +121,11 @@ class Text(LocatedObject, Shape2D):
     def string(self):
         """Text displayed (str)"""
         return self._string
+
+    @property
+    def rotate(self):
+        """Return rotation of text in degrees"""
+        return self._rotate
 
     def get_surf(self, params=None):
         """Surface of text (pygame.Surface)"""
@@ -131,6 +138,8 @@ class Text(LocatedObject, Shape2D):
         except KeyError:
             pass
         surf = font.render(self.string, True, color)
+        if self.rotate:
+            surf = pg.transform.rotate(surf, self.rotate)
         self._surfaces[key] = surf
         return surf
 
