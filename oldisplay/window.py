@@ -59,6 +59,7 @@ class Window:
 
         # Screen management
         self.clock = pg.time.Clock()
+        self.ticks = 0
         self.screen = None
         self.thread = None
 
@@ -99,7 +100,8 @@ class Window:
 
     def refresh(self):
         """Keep the screen updated"""
-        pg.init()
+        if not pg.get_init():
+            pg.init()
         for component in self.components:
             component.init()
         self.screen = pg.display.set_mode(self.settings.size)
@@ -119,6 +121,7 @@ class Window:
                 component.update(self.screen, events=events)
             pg.display.flip()  # Update the full display Surface to the screen
             self.clock.tick(self.settings.fps)
+            self.ticks += 1
         self.screen = None
         pg.quit()
         self.initiated = False
