@@ -163,8 +163,8 @@ class Color(tuple):
         if not colors:
             raise TypeError("Expecting at least one color to mix")
         if len(colors) == 1:
-            return colors[0]
-        return colors[0] * cls.mix(*colors[1:])
+            return cls.get(colors[0])
+        return cls.get(colors[0]) * cls.mix(*colors[1:])
 
 
 COLORS = Param({n: Color(*t) for n, t in COLOR_TUPLES.items()})
