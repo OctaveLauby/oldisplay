@@ -34,7 +34,7 @@ def _read_align_param(align):
     items = align.replace("_", "-").replace(" ", "-").split("-")
     if len(items) == 1:
         if items[0] in MID_ALIGN:
-            return CENTER, CENTER
+            return {'h_align': CENTER, 'v_align': CENTER}
         raise ValueError(
             f"align param must be within {MID_ALIGN}, got '{align}'"
         )
