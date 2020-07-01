@@ -1,8 +1,12 @@
 if __name__ == "__main__":
+    from os.path import dirname, join
     from oldisplay import components, Window, DFT
     from oldisplay.collections import COLORS
 
     x_max, y_max = 700, 700
+    img_path = join(
+        dirname(dirname(__file__)), "resources", "basketball.png"
+    )
 
     window = Window(
         background=COLORS.white,
@@ -66,6 +70,15 @@ if __name__ == "__main__":
             (200, 150), (50, 50), v_align='mid', h_align='mid',
             color='black'
         ),
+
+        # Image
+        components.Image(
+            img_path, (0, 300), (50, 50),
+        ),
+        components.Image(
+            img_path, (100, 300), (100, 50), align='center'
+        ),
+
 
         # Surrounding Text
         components.Text(
