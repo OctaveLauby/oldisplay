@@ -102,9 +102,10 @@ class Window:
         """Keep the screen updated"""
         if not pg.get_init():
             pg.init()
-        for component in self.components:
-            component.init()
+
         self.screen = pg.display.set_mode(self.settings.size)
+        for component in self.components:
+            component.init(self.screen)
         pg.display.set_caption(self.settings.name)
         self.clean()
         self.initiated = True

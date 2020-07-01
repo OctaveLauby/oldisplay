@@ -20,7 +20,7 @@ class Component(ABC):
             **kwargs        : to handle diamond problem
         """
 
-    def init(self):
+    def init(self, surface):
         """Additional initiation to do once pygame is initialized"""
 
     @abstractmethod

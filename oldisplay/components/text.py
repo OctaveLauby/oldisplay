@@ -48,7 +48,7 @@ class Text(LocatedObject, Shape2D):
         self._rotate = rotate
         self._surfaces = {}
 
-    def init(self):
+    def init(self, *args, **kwargs):
         """Initiate font and surface cache, requires pygame.init()"""
         self.size = self.get_surf().get_size()
 
