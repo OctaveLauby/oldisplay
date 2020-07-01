@@ -37,6 +37,7 @@ class Text(LocatedObject, Shape2D):
             # Aspect parameters
             height (int)            : height of text in pixels
             font (str)              : name of font
+                @see pygame.font.get_fonts()
             color (color descr)     : color of display
             bold (bool)             : use bold writing
             italic  (bool)          : use italic writing
