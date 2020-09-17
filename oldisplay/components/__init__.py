@@ -1,6 +1,6 @@
 """Classic components for an application"""
 from .disk import ActiveDisk, Disk
-from .grid import Grid
+from .grid import Grid, FillingGrid
 from .image import Image
 from .line import (
     Segment,

@@ -15,7 +15,7 @@ if __name__ == "__main__":
     window.components = [
 
         # Background
-        components.Grid(
+        components.FillingGrid(
             dx=50, dy=50, color="cyan", width=1,
         ),
 
